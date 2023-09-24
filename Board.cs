@@ -51,7 +51,7 @@ public class Board
     {
         int rows = Grid.GetLength(0);
         int cols = Grid.GetLength(1);
-        string gridString = $"Welcome to Outer Heaven, Solid Snake\nGrid width = {cols}, grid height = {rows}\n";
+        string gridString = $"Grid width = {cols}, grid height = {rows}\n";
         
         for (int i = 0; i < rows; i++)
         {
