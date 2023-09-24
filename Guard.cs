@@ -34,9 +34,6 @@ public class Guard : IObstacle
         Position = pos;
         CharCode = 'g';
         Type = "Guard";
-
-        // Generate a random name for the guard.
-        NameLibrary library = new NameLibrary();
-        Name = library.GetRandomName();
+        Name = "Shannanthony";
     }
 }

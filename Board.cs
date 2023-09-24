@@ -31,11 +31,16 @@ public class Board
         }
     }
 
+    /// <summary>
+    /// Adds an obstacle to the grid.
+    /// </summary>
+    /// <param name="obstacle">The obstacle to be added to the grid.</param>
     public void AddObstacle(ref IObstacle obstacle)
     {
-        // Add an obstacle to the board using polymorphism, this needs to be extensible for obstacles
-        // that take up one square (e.g. guards), can take up multiple squares (e.g. fence), and have a 
-        // field of view (e.g. cameras)
+        int x = obstacle.Position.X;
+        int y = obstacle.Position.Y;
+        
+        Grid[x, y].CurrentObstacle = obstacle;
     }
 
     /// <summary>
