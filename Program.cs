@@ -8,16 +8,14 @@ public static class Program
         OrderedPair bottomRight = new OrderedPair(10, 7);
         Board board = new Board(topLeft, bottomRight);
 
-        Console.WriteLine(board.ToString());
-
         OrderedPair guardPos = new OrderedPair(2, 2);
         IObstacle guard = new Guard(guardPos);
-        board.AddObstacle(ref guard);
+        guard.AddObstacle(ref board);
 
-        OrderedPair fenceStart = new OrderedPair(3, 3);
-        OrderedPair fenceEnd = new OrderedPair(0, 3);
+        OrderedPair fenceStart = new OrderedPair(6, 2);
+        OrderedPair fenceEnd = new OrderedPair(6, 5);
         IObstacle fence = new Fence(fenceStart, fenceEnd);
-        board.AddObstacle(ref fence);
+        fence.AddObstacle(ref board);
         
         Console.WriteLine(board.ToString());
     }

@@ -8,7 +8,7 @@ public class Board
     /// <summary>
     /// Gets the two-dimensional array representing the grid.
     /// </summary>
-    private Square[,] Grid { get; }
+    public Square[,] Grid { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Board"/> class with the specified top-left and bottom-right coordinates.
@@ -35,13 +35,13 @@ public class Board
     /// Adds an obstacle to the grid.
     /// </summary>
     /// <param name="obstacle">The obstacle to be added to the grid.</param>
-    public void AddObstacle(ref IObstacle obstacle)
-    {
-        int x = obstacle.Position.X;
-        int y = obstacle.Position.Y;
-        
-        Grid[x, y].CurrentObstacle = obstacle;
-    }
+    // public void AddObstacle(ref IObstacle obstacle)
+    // {
+    //     int x = obstacle.Position.X;
+    //     int y = obstacle.Position.Y;
+    //     
+    //     Grid[x, y].CurrentObstacle = obstacle;
+    // }
 
     /// <summary>
     /// Returns a string representation of the grid, including its width and height.

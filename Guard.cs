@@ -21,9 +21,13 @@ public class Guard : IObstacle
     public string Type { get; }
     
     /// <summary>
-    /// Gets the name of the guard.
+    /// Adds a guard to the grid.
     /// </summary>
-    public string Name { get; }
+    /// <param name="board">The board to add the guard to.</param>
+    public void AddObstacle(ref Board board)
+    {
+        board.Grid[Position.X, Position.Y].CurrentObstacle = this;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Guard"/> class with the specified position.
@@ -34,6 +38,5 @@ public class Guard : IObstacle
         Position = pos;
         CharCode = 'g';
         Type = "Guard";
-        Name = "Shannanthony";
     }
 }

@@ -24,6 +24,39 @@ public class Fence : IObstacle
     /// Gets the ending position of the fence as an ordered pair.
     /// </summary>
     public OrderedPair EndingPosition { get; }
+
+    /// <summary>
+    /// Adds a fence to the grid.
+    /// </summary>
+    /// <param name="board">The board to add the fence to.</param>
+    public void AddObstacle(ref Board board)
+    {
+        int startX = Position.X;
+        int startY = Position.Y;
+        int endX = EndingPosition.X;
+        int endY = EndingPosition.Y;
+        
+        if (startX == endX)
+        {
+            // Vertical fence
+            for (int y = Math.Min(startY, endY); y <= Math.Max(startY, endY); y++)
+            {
+                board.Grid[startX, y].CurrentObstacle = this;
+            }
+        }
+        else if (startY == endY)
+        {
+            // Horizontal fence
+            for (int x = Math.Min(startX, endX); x <= Math.Max(startX, endX); x++)
+            {
+                board.Grid[x, startY].CurrentObstacle = this;
+            }
+        }
+        else
+        {
+            throw new ArgumentException("Fences must be horizontal or vertical.");
+        }
+    }
     
     /// <summary>
     /// Initializes a new instance of the <see cref="Fence"/> class with the specified starting and ending positions.

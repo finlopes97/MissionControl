@@ -19,4 +19,10 @@ public interface IObstacle
     /// Gets the type of the obstacle as a string.
     /// </summary>
     string Type { get; }
+    
+    /// <summary>
+    /// Adds an obstacle to the grid.
+    /// </summary>
+    /// <param name="board">The board to add the obstacle to.</param>
+    public void AddObstacle(ref Board board);
 }
