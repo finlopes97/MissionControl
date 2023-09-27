@@ -59,6 +59,15 @@ public class Fence : IObstacle
     }
     
     /// <summary>
+    /// Builds a string for use in the main menu
+    /// </summary>
+    /// <returns>A string to be used when printing the main menu of the program.</returns>
+    public override string ToString()
+    {
+        return $"{CharCode}) Add '{Type}' obstacle.";
+    }
+    
+    /// <summary>
     /// Initializes a new instance of the <see cref="Fence"/> class with the specified starting and ending positions.
     /// </summary>
     /// <param name="startingPos">The starting position of the fence as an ordered pair.</param>
@@ -75,5 +84,15 @@ public class Fence : IObstacle
         Type = "Fence";
 
         EndingPosition = endingPosition;
+    }
+    
+    /// <summary>
+    /// Initialises a new instance of the <see cref="Fence"/> class with no additional parameters.
+    /// Specifically for generating a dynamic list in the main menu, not for use in the actual program.
+    /// </summary>
+    public Fence()
+    {
+        CharCode = 'f';
+        Type = "Fence";
     }
 }
