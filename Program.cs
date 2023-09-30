@@ -3,20 +3,90 @@ using System;
 using System.Linq;
 using System.Reflection;
 
+/// <summary>
+/// The main class of the Mission Control program.
+/// </summary>
 public static class Program
 {
+    private static readonly List<IObstacle> Obstacles = new List<IObstacle>();
+    private static Board _board = new Board();
+    
+    /// <summary>
+    /// The entry point of the program.
+    /// </summary>
     public static void Main()
     {
-        List<IObstacle> obstacles = new List<IObstacle>();
-        
         PrintMenu();
-        var input = Console.ReadKey().KeyChar;
-        switch (input)
+
+        while(true)
+        {
+            char option;
+            try
+            {
+                option = GetOption();
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                continue;
+            }
+            try
+            {
+                ProcessOption(option);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Processes the user's selected option and performs the corresponding action.
+    /// </summary>
+    /// <param name="option">The option selected by the user.</param>
+    private static void ProcessOption(char option)
+    {
+        switch (option)
         {
             case 'g':
                 Console.WriteLine( "Enter the guard's location (X,Y):" );
-                OrderedPair position = GetPosition( Console.ReadLine() );
+                var position = GetPosition( Console.ReadLine() );
+                Obstacles.Add(new Guard(position));
+                PrintMenu();
+                break;
+            case 'f':
+                Console.WriteLine( "Enter the location where the fence starts (X,Y):" );
+                var startingPosition = GetPosition( Console.ReadLine() );
+                Console.WriteLine( "Enter the location where the fence ends (X,Y):" );
+                var endingPosition = GetPosition( Console.ReadLine() );
+                Obstacles.Add(new Fence(startingPosition, endingPosition));
+                PrintMenu();
+                break;
+            case 'd':
+                Console.WriteLine( ShowSafeDirections() );
+                PrintMenu();
+                break;
+            case 'x':
+                ExitProgram();
+                break;
+            default:
+                throw new ArgumentException("Invalid option.\n" +
+                                            "Enter code:" );
         }
+    }
+
+    /// <summary>
+    /// Gets a user-selected option from the console input.
+    /// </summary>
+    /// <returns>The user-selected option character.</returns>
+    private static char GetOption()
+    {
+        var input = Console.ReadLine();
+        if (input == null || input.Length != 1)
+            throw new ArgumentException("Invalid input.\n" +
+                                        "Enter code:" );
+        var lowerInput = input.ToLower();
+        return lowerInput[0];
     }
 
     /// <summary>
@@ -50,8 +120,7 @@ public static class Program
     /// </summary>
     private static void ExitProgram()
     {
-        Console.WriteLine("Exiting the program. Goodbye!");
-        Environment.Exit(0); // Terminate the program with a status code of 0 (indicating a successful exit).
+        Environment.Exit(0);
     }
     
     /// <summary>
@@ -69,11 +138,12 @@ public static class Program
             else
                 throw new Exception( $"Could not create instance of type {type.Name}" );
         }
-        Console.WriteLine( "d) Show safe directions\n" +
-                           "m) Display obstacle map\n" +
-                           "p) Find safe path\n" +
-                           "x) Exit\n" +
-                           "Enter code:" );
+
+        Console.WriteLine("d) Show safe directions\n" +
+                          "m) Display obstacle map\n" +
+                          "p) Find safe path\n" +
+                          "x) Exit\n" + 
+                          "Enter code:");
     }
     
     /// <summary>
@@ -87,5 +157,43 @@ public static class Program
             .GetTypes()
             .Where(type => typeof(IObstacle).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
             .ToList();
-    }  
+    }
+    
+    /// <summary>
+    /// Checks the board for obstacles and returns a string of safe directions that the agent can move in.
+    /// </summary>
+    /// <returns>A string of safe directions that the agent can move in.</returns>
+    private static string ShowSafeDirections()
+    {
+        List<char> safeDirections = new List<char> {'N', 'S', 'E', 'W'};
+        var stringOfSafeDirections = "";
+        
+        Console.WriteLine( "Enter your current location (X,Y):" );
+        var position = GetPosition( Console.ReadLine() );
+        
+        if (Obstacles.Count == 0)
+        {
+            return "You can safely move in any of the following directions: NSEW";
+        }
+
+        foreach (var obstacle in Obstacles)
+        {
+            if (position.IsEqual(obstacle.Position))
+            {
+                return "Agent, your location is compromised. Abort mission.";
+            }
+
+            if (position.X == obstacle.Position.X)
+                safeDirections.Remove(position.Y < obstacle.Position.Y ? 'N' : 'S');
+            else if (position.Y == obstacle.Position.Y)
+                safeDirections.Remove(position.X < obstacle.Position.X ? 'E' : 'W');
+        }
+
+        foreach (var direction in safeDirections)
+        {
+            stringOfSafeDirections += direction;
+        }
+        
+        return "You can safely move in any of the following directions: " + stringOfSafeDirections;
+    }
 }   
