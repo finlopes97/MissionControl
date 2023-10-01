@@ -8,7 +8,7 @@ public class Guard : IObstacle
     /// <summary>
     /// Gets the position of the guard as an ordered pair.
     /// </summary>
-    public OrderedPair Position { get; }
+    public List<OrderedPair>? Positions { get; set; }
     
     /// <summary>
     /// Gets the character code representing the guard.
@@ -26,7 +26,7 @@ public class Guard : IObstacle
     /// <param name="board">The board to add the guard to.</param>
     public void AddObstacle(ref Board board)
     {
-        board.Grid[Position.X, Position.Y].CurrentObstacle = this;
+        board.Grid[Positions.First().X, Positions.First().Y].CurrentObstacle = this;
     }
     
     /// <summary>
@@ -44,7 +44,7 @@ public class Guard : IObstacle
     /// <param name="pos">The position of the guard as an ordered pair.</param>
     public Guard(OrderedPair pos)
     {
-        Position = pos;
+        Positions = new List<OrderedPair>() { pos };
         CharCode = 'g';
         Type = "Guard";
     }

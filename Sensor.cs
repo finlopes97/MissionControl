@@ -2,7 +2,7 @@ namespace MissionControl;
 
 public class Sensor : IObstacle
 {
-    public OrderedPair Position { get; }
+    public List<OrderedPair>? Positions { get; set; }
     public char CharCode { get; }
     public string Type { get; }
     public double Range { get; set; }
@@ -14,7 +14,7 @@ public class Sensor : IObstacle
     
     public Sensor(OrderedPair pos, double range)
     {
-        Position = pos;
+        Positions = new List<OrderedPair> { pos };
         CharCode = 's';
         Type = "Sensor";
         Range = range;
@@ -34,6 +34,6 @@ public class Sensor : IObstacle
     
     public void AddObstacle(ref Board board)
     {
-        board.Grid[Position.X, Position.Y].CurrentObstacle = this;
+        board.Grid[Positions.First().X, Positions.First().Y].CurrentObstacle = this;
     }
 }

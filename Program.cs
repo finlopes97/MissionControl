@@ -9,7 +9,6 @@ using System.Reflection;
 public static class Program
 {
     private static readonly List<IObstacle> Obstacles = new List<IObstacle>();
-    private static Board _board = new Board();
     
     /// <summary>
     /// The entry point of the program.
@@ -165,7 +164,7 @@ public static class Program
     /// <returns>A string of safe directions that the agent can move in.</returns>
     private static string ShowSafeDirections()
     {
-        List<char> safeDirections = new List<char> {'N', 'S', 'E', 'W'};
+        var safeDirections = new List<char> {'N', 'S', 'E', 'W'};
         var stringOfSafeDirections = "";
         
         Console.WriteLine( "Enter your current location (X,Y):" );
@@ -178,15 +177,19 @@ public static class Program
 
         foreach (var obstacle in Obstacles)
         {
-            if (position.IsEqual(obstacle.Position))
+            foreach (var obstaclePosition in obstacle.Positions)
             {
-                return "Agent, your location is compromised. Abort mission.";
+                if (position.IsEqual(obstaclePosition))
+                {
+                    return "Agent, your location is compromised. Abort mission.";
+                }
+                if (position.X == obstaclePosition.X)
+                    safeDirections.Remove(position.Y < obstaclePosition.Y ? 'N' : 'S');
+                else if (position.Y == obstaclePosition.Y)
+                    safeDirections.Remove(position.X < obstaclePosition.X ? 'E' : 'W');
             }
 
-            if (position.X == obstacle.Position.X)
-                safeDirections.Remove(position.Y < obstacle.Position.Y ? 'N' : 'S');
-            else if (position.Y == obstacle.Position.Y)
-                safeDirections.Remove(position.X < obstacle.Position.X ? 'E' : 'W');
+
         }
 
         foreach (var direction in safeDirections)

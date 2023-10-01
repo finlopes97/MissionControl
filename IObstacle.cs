@@ -5,11 +5,8 @@ namespace MissionControl;
 /// </summary>
 public interface IObstacle
 {
-    /// <summary>
-    /// Gets the position of the obstacle as an OrderedPair.
-    /// </summary>
-    OrderedPair Position { get; }
-
+    public List<OrderedPair>? Positions { get; set; }
+    
     /// <summary>
     /// Gets the character code that represents the obstacle.
     /// </summary>
