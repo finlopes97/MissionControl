@@ -61,8 +61,8 @@ public readonly struct OrderedPair
     /// <returns>True if the OrderedPairs are diagonal; otherwise, false.</returns>
     public bool IsDiagonalFrom(OrderedPair other)
     {
-        int xDiff = Math.Abs(X - other.X);
-        int yDiff = Math.Abs(Y - other.Y);
+        var xDiff = Math.Abs(X - other.X);
+        var yDiff = Math.Abs(Y - other.Y);
 
         return xDiff == yDiff && xDiff != 0 && yDiff != 0;
     }

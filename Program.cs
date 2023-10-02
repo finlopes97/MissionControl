@@ -49,17 +49,26 @@ public static class Program
         {
             case 'g':
                 Console.WriteLine( "Enter the guard's location (X,Y):" );
-                var position = GetPosition( Console.ReadLine() );
-                Obstacles.Add(new Guard(position));
+                var guardPosition = GetPosition( Console.ReadLine() );
+                Obstacles.Add(new Guard(guardPosition));
                 PrintMenu();
                 break;
             case 'f':
                 Console.WriteLine( "Enter the location where the fence starts (X,Y):" );
-                var startingPosition = GetPosition( Console.ReadLine() );
+                var fenceStartingPosition = GetPosition( Console.ReadLine() );
                 Console.WriteLine( "Enter the location where the fence ends (X,Y):" );
-                var endingPosition = GetPosition( Console.ReadLine() );
-                Obstacles.Add(new Fence(startingPosition, endingPosition));
+                var fenceEndingPosition = GetPosition( Console.ReadLine() );
+                Obstacles.Add(new Fence(fenceStartingPosition, fenceEndingPosition));
                 PrintMenu();
+                break;
+            case 's':
+                Console.WriteLine( "Enter the sensor's location (X,Y):" );
+                var sensorPosition = GetPosition( Console.ReadLine() ); 
+                Console.WriteLine( "Enter the sensor's range (in klicks):" );
+                var sensorRange = GetDouble(Console.ReadLine());
+                var sensor = new Sensor(sensorPosition, sensorRange);
+                Obstacles.Add(sensor);
+                Console.WriteLine(sensor.ListOfPositions());
                 break;
             case 'd':
                 Console.WriteLine( ShowSafeDirections() );
@@ -111,7 +120,17 @@ public static class Program
             return new OrderedPair(x,y);
         else
             throw new FormatException("Invalid input.");
+    }
+
+    private static double GetDouble(string? doubleString)
+    {
+        if (doubleString == null)
+            throw new ArgumentException( "Invalid input." );
         
+        if (double.TryParse(doubleString, out var result))
+            return result;
+        else
+            throw new ArgumentException( "Invalid input." );
     }
     
     /// <summary>
@@ -154,7 +173,7 @@ public static class Program
         // Use reflection to get all classes that implement IObstacle.
         return Assembly.GetExecutingAssembly()
             .GetTypes()
-            .Where(type => typeof(IObstacle).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
+            .Where(type => typeof(IObstacle).IsAssignableFrom(type) && type is { IsInterface: false, IsAbstract: false })
             .ToList();
     }
     
@@ -177,19 +196,19 @@ public static class Program
 
         foreach (var obstacle in Obstacles)
         {
-            foreach (var obstaclePosition in obstacle.Positions)
-            {
-                if (position.IsEqual(obstaclePosition))
+            if (obstacle.Positions != null)
+                foreach (var obstaclePosition in obstacle.Positions)
                 {
-                    return "Agent, your location is compromised. Abort mission.";
+                    if (position.IsEqual(obstaclePosition))
+                    {
+                        return "Agent, your location is compromised. Abort mission.";
+                    }
+
+                    if (position.X == obstaclePosition.X)
+                        safeDirections.Remove(position.Y < obstaclePosition.Y ? 'N' : 'S');
+                    else if (position.Y == obstaclePosition.Y)
+                        safeDirections.Remove(position.X < obstaclePosition.X ? 'E' : 'W');
                 }
-                if (position.X == obstaclePosition.X)
-                    safeDirections.Remove(position.Y < obstaclePosition.Y ? 'N' : 'S');
-                else if (position.Y == obstaclePosition.Y)
-                    safeDirections.Remove(position.X < obstaclePosition.X ? 'E' : 'W');
-            }
-
-
         }
 
         foreach (var direction in safeDirections)

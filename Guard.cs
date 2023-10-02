@@ -41,10 +41,10 @@ public class Guard : IObstacle
     /// <summary>
     /// Initializes a new instance of the <see cref="Guard"/> class with the specified position.
     /// </summary>
-    /// <param name="pos">The position of the guard as an ordered pair.</param>
-    public Guard(OrderedPair pos)
+    /// <param name="guardPosition">The position of the guard as an ordered pair.</param>
+    public Guard(OrderedPair guardPosition)
     {
-        Positions = new List<OrderedPair>() { pos };
+        Positions = new List<OrderedPair>() { guardPosition };
         CharCode = 'g';
         Type = "Guard";
     }

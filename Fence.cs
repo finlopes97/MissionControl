@@ -37,12 +37,12 @@ public class Fence : IObstacle
     /// <summary>
     /// Initializes a new instance of the <see cref="Fence"/> class with the specified starting and ending positions.
     /// </summary>
-    /// <param name="startingPos">The starting position of the fence as an ordered pair.</param>
-    /// <param name="endingPosition">The ending position of the fence as an ordered pair.</param>
+    /// <param name="fenceStartingPosition">The starting position of the fence as an ordered pair.</param>
+    /// <param name="fenceEndingPosition">The ending position of the fence as an ordered pair.</param>
     /// <exception cref="ArgumentException">Thrown when the fence is not horizontal or vertical.</exception>
-    public Fence(OrderedPair startingPos, OrderedPair endingPosition)
+    public Fence(OrderedPair fenceStartingPosition, OrderedPair fenceEndingPosition)
     {
-        if (startingPos.IsEqual(endingPosition) || startingPos.IsDiagonalFrom(endingPosition))
+        if (fenceStartingPosition.IsEqual(fenceEndingPosition) || fenceStartingPosition.IsDiagonalFrom(fenceEndingPosition))
         {
             throw new ArgumentException("Fences must be horizontal or vertical.");
         }
@@ -50,10 +50,10 @@ public class Fence : IObstacle
         int numPoints;
         var points = new List<OrderedPair>();
         
-        var startX = startingPos.X;
-        var startY = startingPos.Y;
-        var endX = endingPosition.X;
-        var endY = endingPosition.Y;
+        var startX = fenceStartingPosition.X;
+        var startY = fenceStartingPosition.Y;
+        var endX = fenceEndingPosition.X;
+        var endY = fenceEndingPosition.Y;
         
         if (startX == endX) // Vertical fence
         {
