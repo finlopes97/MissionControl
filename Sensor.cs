@@ -1,30 +1,36 @@
-using System.Runtime.CompilerServices;
-
 namespace MissionControl;
 
+/// <summary>
+/// Represents a sensor used in a mission control system.
+/// Sensors can detect obstacles within a specified range.
+/// </summary>
 public class Sensor : IObstacle
 {
+    /// <summary>
+    /// Gets or sets the list of positions associated with this sensor.
+    /// </summary>
     public List<OrderedPair>? Positions { get; set; }
+    
+    /// <summary>
+    /// Gets the character code representing this sensor.
+    /// </summary>
     public char CharCode { get; }
+    
+    /// <summary>
+    /// Gets the type (name) of this obstacle.
+    /// </summary>
     public string Type { get; }
-    public static double SensorRange { get; set; }
     
-    public override string ToString()
-    {
-        return $"{CharCode}) Add '{Type}' obstacle.";
-    }
-
-    public string ListOfPositions()
-    {
-        var output = "";
-        if (Positions == null) return "Positions is null";
-        foreach (var position in Positions)
-        {
-            output += position.ToString() + '\n';
-        }
-        return output;
-    }
+    /// <summary>
+    /// Gets or sets the static sensor range for all instances of the sensor class.
+    /// </summary>
+    private static double SensorRange { get; set; }
     
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Sensor"/> class with specified position and range.
+    /// </summary>
+    /// <param name="sensorPosition">The initial position of the sensor.</param>
+    /// <param name="sensorRange">The range within which the sensor can detect obstacles.</param>
     public Sensor(OrderedPair sensorPosition, double sensorRange)
     {
         Positions = new List<OrderedPair> { sensorPosition };
@@ -32,7 +38,6 @@ public class Sensor : IObstacle
         Type = "Sensor";
         SensorRange = sensorRange;
         
-        // Fill in an area around the sensor using IsCellInRange
         for (var x = sensorPosition.X - SensorRange; x <= sensorPosition.X + SensorRange; x++)
         {
             for (var y = sensorPosition.Y - SensorRange; y <= sensorPosition.Y + SensorRange; y++)
@@ -46,6 +51,30 @@ public class Sensor : IObstacle
         }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Sensor"/> class with default values.
+    /// </summary>
+    public Sensor()
+    {
+        CharCode = 's';
+        Type = "Sensor";
+    }
+    
+    /// <summary>
+    /// Adds the sensor as an obstacle to the specified board.
+    /// </summary>
+    /// <param name="board">The board to which the sensor is added.</param>
+    public void AddObstacle(ref Board board)
+    {
+        if (Positions != null) board.Grid[Positions.First().X, Positions.First().Y].CurrentObstacle = this;
+    }
+    
+    /// <summary>
+    /// Determines if a given cell is within the sensor's range.
+    /// </summary>
+    /// <param name="sensorPosition">The sensor's position.</param>
+    /// <param name="cellPosition">The position of the cell to check.</param>
+    /// <returns>True if the cell is within range; otherwise, false.</returns>
     private static bool IsCellInRange(OrderedPair sensorPosition, OrderedPair cellPosition)
     {
         var distanceBetweenCells = Math.Sqrt(
@@ -54,19 +83,28 @@ public class Sensor : IObstacle
         
         return distanceBetweenCells <= SensorRange;
     }
-
+    
     /// <summary>
-    /// Initialises a new instance of the <see cref="Sensor"/> class with no additional parameters.
-    /// Specifically for generating a dynamic list in the main menu, not for use in the actual program.
+    /// Generates a list of positions within the sensor's range.
     /// </summary>
-    public Sensor()
+    /// <returns>A string containing a list of positions, one per line.</returns>
+    public string ListOfPositions()
     {
-        CharCode = 's';
-        Type = "Sensor";
+        var output = "";
+        if (Positions == null) return "Positions is null";
+        foreach (var position in Positions)
+        {
+            output += position.ToString() + '\n';
+        }
+        return output;
     }
     
-    public void AddObstacle(ref Board board)
+    /// <summary>
+    /// Returns a string representation of the sensor.
+    /// </summary>
+    /// <returns>A string in the format "{CharCode}) Add '{Type}' obstacle."</returns>
+    public override string ToString()
     {
-        board.Grid[Positions.First().X, Positions.First().Y].CurrentObstacle = this;
+        return $"{CharCode}) Add '{Type}' obstacle.";
     }
 }

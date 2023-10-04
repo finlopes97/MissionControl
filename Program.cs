@@ -74,6 +74,15 @@ public static class Program
                 Console.WriteLine( ShowSafeDirections() );
                 PrintMenu();
                 break;
+            case 'm':
+                Console.WriteLine( "Enter the location of the top-left cell of the map (X,Y):" );
+                var mapTopLeft = GetPosition( Console.ReadLine() );
+                Console.WriteLine( "Enter the location of the bottom-right cell of the map (X,Y):" );
+                var mapBottomRight = GetPosition( Console.ReadLine() );
+                Board board = new Board(mapTopLeft, mapBottomRight, Obstacles);
+                Console.WriteLine( board.ToString() );
+                PrintMenu();
+                break;
             case 'x':
                 ExitProgram();
                 break;

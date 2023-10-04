@@ -15,7 +15,7 @@ public class Board
     /// </summary>
     /// <param name="topLeft">The top-left coordinates of the grid.</param>
     /// <param name="bottomRight">The bottom-right coordinates of the grid.</param>
-    public Board(OrderedPair topLeft, OrderedPair bottomRight)
+    public Board(OrderedPair topLeft, OrderedPair bottomRight, List<IObstacle> obstaclesList)
     {
         int gridWidth = bottomRight.X - topLeft.X;
         int gridHeight = bottomRight.Y - topLeft.Y;
@@ -27,6 +27,13 @@ public class Board
             for (int y = 0; y < gridHeight; y++)
             {
                 Grid[x, y] = new Square(new OrderedPair(x,y));
+                foreach (var obstacle in obstaclesList)
+                {
+                    if (obstacle.Positions != null && obstacle.Positions.Contains(new OrderedPair(x,y)))
+                    {
+                        Grid[x, y].CurrentObstacle = obstacle;
+                    }
+                }
             }
         }
     }
