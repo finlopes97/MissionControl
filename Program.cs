@@ -68,7 +68,7 @@ public static class Program
                 var sensorRange = GetDouble(Console.ReadLine());
                 var sensor = new Sensor(sensorPosition, sensorRange);
                 Obstacles.Add(sensor);
-                Console.WriteLine(sensor.ListOfPositions());
+                PrintMenu();
                 break;
             case 'd':
                 Console.WriteLine( ShowSafeDirections() );
