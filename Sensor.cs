@@ -42,8 +42,9 @@ public class Sensor : IObstacle
         {
             for (var y = sensorPosition.Y - SensorRange; y <= sensorPosition.Y + SensorRange; y++)
             {
+                throw new NotImplementedException( "Rounding seems to break this, fix later." );
                 var cellPosition = new OrderedPair(Convert.ToInt32(x),Convert.ToInt32(y));
-                if (IsCellInRange(sensorPosition, cellPosition))
+                if (CellInRange(sensorPosition, cellPosition))
                 {
                     Positions.Add(cellPosition);
                 }
@@ -75,7 +76,7 @@ public class Sensor : IObstacle
     /// <param name="sensorPosition">The sensor's position.</param>
     /// <param name="cellPosition">The position of the cell to check.</param>
     /// <returns>True if the cell is within range; otherwise, false.</returns>
-    private static bool IsCellInRange(OrderedPair sensorPosition, OrderedPair cellPosition)
+    private static bool CellInRange(OrderedPair sensorPosition, OrderedPair cellPosition)
     {
         var distanceBetweenCells = Math.Sqrt(
             Math.Pow(cellPosition.X - sensorPosition.X, 2) +

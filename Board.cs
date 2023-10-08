@@ -17,14 +17,14 @@ public class Board
     /// <param name="bottomRight">The bottom-right coordinates of the grid.</param>
     public Board(OrderedPair topLeft, OrderedPair bottomRight, List<IObstacle> obstaclesList)
     {
-        int gridWidth = bottomRight.X - topLeft.X;
-        int gridHeight = bottomRight.Y - topLeft.Y;
+        var gridWidth = bottomRight.X - topLeft.X;
+        var gridHeight = bottomRight.Y - topLeft.Y;
         
         Grid = new Square[gridWidth,gridHeight];
         
-        for (int x = 0; x < gridWidth; x++)
+        for (var x = 0; x < gridWidth; x++)
         {
-            for (int y = 0; y < gridHeight; y++)
+            for (var y = 0; y < gridHeight; y++)
             {
                 Grid[x, y] = new Square(new OrderedPair(x,y));
                 foreach (var obstacle in obstaclesList)

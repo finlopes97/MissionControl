@@ -28,15 +28,6 @@ public class Guard : IObstacle
     {
         board.Grid[Positions.First().X, Positions.First().Y].CurrentObstacle = this;
     }
-    
-    /// <summary>
-    /// Builds a string for use in the main menu
-    /// </summary>
-    /// <returns>A string to be used when printing the main menu of the program.</returns>
-    public override string ToString()
-    {
-        return $"{CharCode}) Add '{Type}' obstacle.";
-    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Guard"/> class with the specified position.
@@ -57,5 +48,14 @@ public class Guard : IObstacle
     {
         CharCode = 'g';
         Type = "Guard";
+    }
+        
+    /// <summary>
+    /// Builds a string for use in the main menu
+    /// </summary>
+    /// <returns>A string to be used when printing the main menu of the program.</returns>
+    public override string ToString()
+    {
+        return $"{CharCode}) Add '{Type}' obstacle.";
     }
 }

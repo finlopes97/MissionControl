@@ -109,6 +109,17 @@ public static class God
         var cameraDirection = GetDirection( Console.ReadLine() );
     }
 
+    public static void AddSpotlight()
+    {
+        Console.WriteLine( "Enter the spotlight's location (X,Y):" );
+        var spotlightPosition = GetPosition(Console.ReadLine());
+        Console.WriteLine( "Enter the direction the spotlight is facing in (n, s, e or w):" );
+        var spotlightDirection = GetDirection( Console.ReadLine() );
+        Console.WriteLine( "Enter the spotlight's range (in klicks):" );
+        var spotlightRange = GetRange( Console.ReadLine() );
+        Obstacles.Add(new Spotlight(spotlightPosition, spotlightDirection, spotlightRange));
+    }
+
     /// <summary>
     /// Creates a new board based on user input and displays it.
     /// </summary>
@@ -118,7 +129,7 @@ public static class God
         var mapTopLeft = GetPosition( Console.ReadLine() );
         Console.WriteLine( "Enter the location of the bottom-right cell of the map (X,Y):" );
         var mapBottomRight = GetPosition( Console.ReadLine() );
-        Board board = new Board(mapTopLeft, mapBottomRight, Obstacles);
+        var board = new Board(mapTopLeft, mapBottomRight, Obstacles);
         Console.WriteLine( board.ToString() );
     }
 

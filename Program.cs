@@ -62,6 +62,12 @@ public static class Program
             case 's':
                 God.AddSensor();
                 break;
+            case 'c':
+                God.AddCamera();
+                break;
+            case 'l':
+                God.AddSpotlight();
+                break;
             case 'd':
                 God.ShowSafeDirections();
                 break;
