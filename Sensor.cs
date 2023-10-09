@@ -20,7 +20,12 @@ public class Sensor : IObstacle
     /// Gets the type (name) of this obstacle.
     /// </summary>
     public string Type { get; }
-    
+
+    /// <summary>
+    /// Determines the list position in which this obstacle appears in the main menu.
+    /// </summary>
+    public int Priority => 2;
+
     /// <summary>
     /// Gets or sets the static sensor range for all instances of the sensor class.
     /// </summary>

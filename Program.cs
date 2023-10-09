@@ -8,7 +8,6 @@ using System.Reflection;
 /// </summary>
 public static class Program
 {
-    
     /// <summary>
     /// The entry point of the program.
     /// </summary>
@@ -113,9 +112,18 @@ public static class Program
     private static List<Type> GetObstacleTypes()
     {
         // Use reflection to get all classes that implement IObstacle.
-        return Assembly.GetExecutingAssembly()
+        var obstacleTypes = Assembly.GetExecutingAssembly()
             .GetTypes()
             .Where(type => typeof(IObstacle).IsAssignableFrom(type) && type is { IsInterface: false, IsAbstract: false })
             .ToList();
+        
+        obstacleTypes.Sort((type1, type2) =>
+        {
+            var obstacle1 = (IObstacle?)Activator.CreateInstance(type1);
+            var obstacle2 = (IObstacle?)Activator.CreateInstance(type2);
+            return obstacle1.Priority.CompareTo(obstacle2.Priority);
+        });
+
+        return obstacleTypes;
     }
 }   

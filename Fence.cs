@@ -16,7 +16,12 @@ public class Fence : IObstacle
     /// Gets the type of the obstacle as a string.
     /// </summary>
     public string Type { get; }
-    
+
+    /// <summary>
+    /// Determines the list position in which this obstacle appears in the main menu.
+    /// </summary>
+    public int Priority => 1;
+
     public void AddObstacle(ref Board board)
     {
         foreach (var pos in Positions)

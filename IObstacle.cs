@@ -18,6 +18,11 @@ public interface IObstacle
     string Type { get; }
     
     /// <summary>
+    /// Determines the list position of the obstacle on the menu.
+    /// </summary>
+    int Priority { get; }
+    
+    /// <summary>
     /// Adds an obstacle to the grid.
     /// </summary>
     /// <param name="board">The board to add the obstacle to.</param>

@@ -15,6 +15,11 @@ public class Camera : IObstacle
     public string Type { get; }
 
     /// <summary>
+    /// Determines the list position in which this obstacle appears in the main menu.
+    /// </summary>
+    public int Priority => 3;
+
+    /// <summary>
     /// Gets or sets the direction of the camera. Represented as an ordered pair (e.g. N=(0,1)).
     /// </summary>
     public static OrderedPair Direction { get; set; }

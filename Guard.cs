@@ -19,6 +19,11 @@ public class Guard : IObstacle
     /// Gets the type of the obstacle as a string.
     /// </summary>
     public string Type { get; }
+
+    /// <summary>
+    /// Determines the list position in which this obstacle appears in the main menu.
+    /// </summary>
+    public int Priority => 0;
     
     /// <summary>
     /// Adds a guard to the grid.
@@ -26,7 +31,10 @@ public class Guard : IObstacle
     /// <param name="board">The board to add the guard to.</param>
     public void AddObstacle(ref Board board)
     {
-        board.Grid[Positions.First().X, Positions.First().Y].CurrentObstacle = this;
+        if (Positions != null)
+        {
+            board.Grid[Positions.First().X, Positions.First().Y].CurrentObstacle = this;
+        }
     }
 
     /// <summary>
