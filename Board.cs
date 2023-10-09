@@ -15,6 +15,7 @@ public class Board
     /// </summary>
     /// <param name="topLeft">The top-left coordinates of the grid.</param>
     /// <param name="bottomRight">The bottom-right coordinates of the grid.</param>
+    /// <param name="obstaclesList">List of obstacles that exist in the program.</param>
     public Board(OrderedPair topLeft, OrderedPair bottomRight, List<IObstacle> obstaclesList)
     {
         var gridWidth = bottomRight.X - topLeft.X;
@@ -22,9 +23,9 @@ public class Board
         
         Grid = new Square[gridWidth,gridHeight];
         
-        for (var x = 0; x < gridWidth; x++)
+        for (var y = 0; y < gridHeight; y++)
         {
-            for (var y = 0; y < gridHeight; y++)
+            for (var x = 0; x < gridWidth; x++)
             {
                 Grid[x, y] = new Square(new OrderedPair(x,y));
                 foreach (var obstacle in obstaclesList)
@@ -44,15 +45,15 @@ public class Board
     /// <returns>A string representation of the grid.</returns>
     public override string ToString()
     {
-        int rows = Grid.GetLength(0);
-        int cols = Grid.GetLength(1);
+        var rows = Grid.GetLength(0);
+        var cols = Grid.GetLength(1);
         string gridString = $"Grid width = {cols}, grid height = {rows}\n";
         
-        for (int i = 0; i < rows; i++)
+        for (var y = 0; y < rows; y++)
         {
-            for (int j = 0; j < cols; j++)
+            for (var x = 0; x < cols; x++)
             {
-                gridString += Grid[i, j].SquareCharCode;
+                gridString += Grid[x, y].SquareCharCode;
             }
 
             gridString += "\n";
