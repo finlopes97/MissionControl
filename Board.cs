@@ -18,6 +18,9 @@ public class Board
     /// <param name="obstaclesList">List of obstacles that exist in the program.</param>
     public Board(OrderedPair topLeft, OrderedPair bottomRight, List<IObstacle> obstaclesList)
     {
+        if(bottomRight.X <= topLeft.X || bottomRight.Y <= topLeft.Y)
+            throw new ArgumentException( "Invalid map specification." );
+        
         var gridWidth = bottomRight.X - topLeft.X;
         var gridHeight = bottomRight.Y - topLeft.Y;
         
