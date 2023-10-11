@@ -58,9 +58,18 @@ public class Camera : IObstacle
     /// <param name="cell">The <see cref="Cell"/> to which the camera is added.</param>
     public void AddObstacle(ref Cell cell)
     {
-        if (Positions != null && (Positions.Contains(cell.CellPosition) || InCone(Positions.First(), cell.CellPosition)))
+        if(Positions == null) return;
+        foreach (var position in Positions)
         {
-            cell.CurrentObstacle = this;
+            if (InCone(position, cell.CellPosition))
+            {
+                cell.CurrentObstacle = this;
+                break;
+            } if (Positions.Contains(cell.CellPosition))
+            {
+                cell.CurrentObstacle = this;
+                break;
+            }
         }
     }
 
@@ -74,12 +83,12 @@ public class Camera : IObstacle
     {
         var vectorToCell = new OrderedPair(
             cellPosition.X - cameraPosition.X, 
-            cellPosition.Y - cellPosition.Y);
+            cellPosition.Y - cameraPosition.Y);
 
         var dotProduct = (vectorToCell.X * Direction.X + vectorToCell.Y * Direction.Y) /
                          (vectorToCell.Length() * Direction.Length());
         
-        double halfConeAngleCosine = Math.Cos(Math.PI / 8);
+        var halfConeAngleCosine = Math.Cos(Math.PI / 8);
         
         return dotProduct >= halfConeAngleCosine;
     }
