@@ -54,7 +54,7 @@ public class Camera : IObstacle
     /// <summary>
     /// Adds the camera as an obstacle to the specified board.
     /// </summary>
-    /// <param name="board">The board to which the camera is added.</param>
+    /// <param name="board">The <see cref="Board"/> to which the camera is added.</param>
     public void AddObstacle(ref Board board)
     {
         throw new NotImplementedException("Fuck");

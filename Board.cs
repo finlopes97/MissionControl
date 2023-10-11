@@ -1,14 +1,14 @@
 namespace MissionControl;
 
 /// <summary>
-/// Represents a grid used in the program.
+/// Represents a grid of <see cref="Cell"/> objects used in the program.
 /// </summary>
 public class Board
 {
     /// <summary>
     /// Gets the two-dimensional array representing the grid.
     /// </summary>
-    public Square[,] Grid { get; }
+    public Cell[,] Grid { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Board"/> class with the specified top-left and bottom-right coordinates.
@@ -24,13 +24,13 @@ public class Board
         var gridWidth = bottomRight.X - topLeft.X;
         var gridHeight = bottomRight.Y - topLeft.Y;
         
-        Grid = new Square[gridWidth,gridHeight];
+        Grid = new Cell[gridWidth,gridHeight];
         
         for (var y = 0; y < gridHeight; y++)
         {
             for (var x = 0; x < gridWidth; x++)
             {
-                Grid[x, y] = new Square(new OrderedPair(x,y));
+                Grid[x, y] = new Cell(new OrderedPair(x,y));
                 foreach (var obstacle in obstaclesList)
                 {
                     if (obstacle.Positions != null && obstacle.Positions.Contains(new OrderedPair(x,y)))

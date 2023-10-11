@@ -196,10 +196,10 @@ public static class God
         switch (directionString)
         {
             case "n":
-                direction = new OrderedPair(0, 1);
+                direction = new OrderedPair(0, -1);
                 break;
             case "s":
-                direction = new OrderedPair(0, -1);
+                direction = new OrderedPair(0, 1);
                 break;
             case "e":
                 direction = new OrderedPair(1, 0);

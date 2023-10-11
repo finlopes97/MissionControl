@@ -2,6 +2,9 @@ namespace MissionControl;
 
 public class Spotlight : IObstacle
 {
+    /// <summary>
+    /// A list of positions that the obstacle occupies on the grid.
+    /// </summary>
     public List<OrderedPair>? Positions { get; set; }
     
     /// <summary>
@@ -19,10 +22,19 @@ public class Spotlight : IObstacle
     /// </summary>
     public int Priority => 4;
 
+    /// <summary>
+    /// The direction that the spotlight is facing in, represented as an ordered pair vector.
+    /// </summary>
     private OrderedPair SpotlightDirection { get; }
     
+    /// <summary>
+    /// The offset between the spotlight's endPoint point and the end of its range.
+    /// </summary>
     private double SpotlightRange { get; }
 
+    /// <summary>
+    /// The diameter of the spotlight.
+    /// </summary>
     private const int SpotlightDiameter = 2;
 
     /// <summary>
@@ -34,6 +46,12 @@ public class Spotlight : IObstacle
         if (Positions != null) board.Grid[Positions.First().X, Positions.First().Y].CurrentObstacle = this;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Spotlight"/> class with a specified position, direction and range.
+    /// </summary>
+    /// <param name="spotlightPosition">An <see cref="OrderedPair"/> endPoint position of the spotlight.</param>
+    /// <param name="spotlightDirection">An <see cref="OrderedPair"/> that represents the direction that the spotlight is facing in.</param>
+    /// <param name="spotlightRange">A <see cref="System.Double"/> the offset between the spotlight's endPoint point and the end of its range.</param>
     public Spotlight(OrderedPair spotlightPosition, OrderedPair spotlightDirection, double spotlightRange)
     {
         Positions = new List<OrderedPair>() { spotlightPosition };
@@ -46,6 +64,9 @@ public class Spotlight : IObstacle
         GenerateSpotlightArea();
     }
 
+    /// <summary>
+    /// Generates the area that the spotlight covers and adds it to the list of positions that the obstacle occupies.
+    /// </summary>
     private void GenerateSpotlightArea()
     {
         var spotlightRangeRounded = Convert.ToInt32(SpotlightRange);
@@ -73,11 +94,17 @@ public class Spotlight : IObstacle
         }
     }
 
-    private static bool CellInRange(OrderedPair origin, OrderedPair cellPosition)
+    /// <summary>
+    /// Checks if a cell is within the spotlight's range.
+    /// </summary>
+    /// <param name="endPoint">An <see cref="OrderedPair"/> that represents the end point of the spotlight's range.</param>
+    /// <param name="cellPosition">An <see cref="OrderedPair"/> that represents the cell to compare against the endPoint</param>
+    /// <returns></returns>
+    private static bool CellInRange(OrderedPair endPoint, OrderedPair cellPosition)
     {
         var distanceBetweenCells = Math.Sqrt(
-            Math.Pow(cellPosition.X - origin.X, 2) +
-            Math.Pow(cellPosition.Y - origin.Y, 2));
+            Math.Pow(cellPosition.X - endPoint.X, 2) +
+            Math.Pow(cellPosition.Y - endPoint.Y, 2));
 
         return distanceBetweenCells <= SpotlightDiameter;
     }
