@@ -107,6 +107,7 @@ public static class God
         var cameraPosition = GetPosition( Console.ReadLine() );
         Console.WriteLine( "Enter the direction the camera is facing (n, s, e or w):" );
         var cameraDirection = GetDirection( Console.ReadLine() );
+        Obstacles.Add(new Camera(cameraPosition, cameraDirection));
     }
 
     public static void AddSpotlight()

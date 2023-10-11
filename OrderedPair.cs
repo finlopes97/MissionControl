@@ -66,4 +66,13 @@ public readonly struct OrderedPair
 
         return xDiff == yDiff && xDiff != 0 && yDiff != 0;
     }
+    
+    /// <summary>
+    /// Calculates the length (magnitude) of the vector represented by the X and Y coordinates.
+    /// </summary>
+    /// <returns>The length of the vector.</returns>
+    public double Length()
+    {
+        return Math.Sqrt(X * X + Y * Y);
+    }
 }

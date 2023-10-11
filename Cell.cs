@@ -15,19 +15,19 @@ public class Cell
         set
         {
             _currentObstacle = value;
-            if (value != null) SquareCharCode = value.CharCode;
+            if (value != null) CellCharCode = value.CharCode;
         }
     }
     
     /// <summary>
     /// Gets the coordinates of this square as an ordered pair.
     /// </summary>
-    public OrderedPair ThisCoord { get; } 
+    public OrderedPair CellPosition { get; } 
     
     /// <summary>
     /// Gets the default character for this square before being occupied by an obstacle.
     /// </summary>
-    public char SquareCharCode { get; private set; } 
+    public char CellCharCode { get; private set; } 
     
     /// <summary>
     /// Initializes a new instance of the <see cref="Cell"/> class with the specified obstacle and coordinates.
@@ -36,8 +36,8 @@ public class Cell
     /// <param name="obstacle">The obstacle currently occupying this square (optional).</param>
     public Cell(OrderedPair coord, IObstacle? obstacle = null)
     {
-        ThisCoord = coord;
+        CellPosition = coord;
         CurrentObstacle = obstacle;
-        SquareCharCode = '.';
+        CellCharCode = '.';
     }
 }

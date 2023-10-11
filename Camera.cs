@@ -52,11 +52,42 @@ public class Camera : IObstacle
     }
     
     /// <summary>
-    /// Adds the camera as an obstacle to the specified board.
+    /// Adds the camera as an obstacle to the specified board. Looks in the direction specified by <see cref="Direction"/>.
+    /// Extends indefinitely in a cone shape.
     /// </summary>
     /// <param name="board">The <see cref="Board"/> to which the camera is added.</param>
     public void AddObstacle(ref Board board)
     {
-        throw new NotImplementedException("Fuck");
+        for (var y = 0; y < board.Cols; y++)
+        {
+            for (var x = 0; x < board.Rows; x++)
+            {
+                // If the cell is within the cone of the camera, add the camera to it
+                if (Positions != null && InCone(Positions[0], new OrderedPair(x, y)))
+                {
+                    board.Grid[x, y].CurrentObstacle = this;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Checks the cells in front of the camera in an infinite range, in a 45 degree cone, based on the <see cref="Direction"/> of the camera.
+    /// </summary>
+    /// <param name="cameraPosition">The <see cref="OrderedPair"/> that represents the camera's origin position.</param>
+    /// <param name="cellPosition">The <see cref="OrderedPair"/> that represents the cell to compare to.</param>
+    /// <returns>Returns true if the cell is within the camera's cone of vision, false if the cell is outside of it.</returns>
+    private static bool InCone(OrderedPair cameraPosition, OrderedPair cellPosition)
+    {
+        var vectorToCell = new OrderedPair(
+            cellPosition.X - cameraPosition.X, 
+            cellPosition.Y - cellPosition.Y);
+
+        var dotProduct = (vectorToCell.X * Direction.X + vectorToCell.Y * Direction.Y) /
+                         (vectorToCell.Length() * Direction.Length());
+        
+        double halfConeAngleCosine = Math.Cos(Math.PI / 8);
+        
+        return dotProduct >= halfConeAngleCosine;
     }
 }
