@@ -22,11 +22,11 @@ public class Fence : IObstacle
     /// </summary>
     public int Priority => 1;
 
-    public void AddObstacle(ref Board board)
+    public void AddObstacle(ref Cell cell)
     {
-        foreach (var pos in Positions)
+        if (Positions != null && Positions.Contains(cell.CellPosition))
         {
-            board.Grid[pos.X, pos.Y].CurrentObstacle = this;
+            cell.CurrentObstacle = this;
         }
     }
     

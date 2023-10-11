@@ -40,10 +40,13 @@ public class Spotlight : IObstacle
     /// <summary>
     /// Adds an obstacle to the grid.
     /// </summary>
-    /// <param name="board">The board to add the obstacle to.</param>
-    public void AddObstacle(ref Board board)
+    /// <param name="cell">The <see cref="Cell"/> to add the obstacle to.</param>
+    public void AddObstacle(ref Cell cell)
     {
-        if (Positions != null) board.Grid[Positions.First().X, Positions.First().Y].CurrentObstacle = this;
+        if (Positions != null && Positions.Contains(cell.CellPosition))
+        {
+            cell.CurrentObstacle = this;
+        }
     }
 
     /// <summary>

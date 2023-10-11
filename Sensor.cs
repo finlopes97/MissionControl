@@ -47,7 +47,7 @@ public class Sensor : IObstacle
         {
             for (var y = sensorPosition.Y - SensorRange; y <= sensorPosition.Y + SensorRange; y++)
             {
-                throw new NotImplementedException( "Rounding seems to break this, fix later." );
+                // throw new NotImplementedException( "Rounding seems to break this, fix later." );
                 var cellPosition = new OrderedPair(Convert.ToInt32(x),Convert.ToInt32(y));
                 if (CellInRange(sensorPosition, cellPosition))
                 {
@@ -67,12 +67,15 @@ public class Sensor : IObstacle
     }
     
     /// <summary>
-    /// Adds the sensor as an obstacle to the specified board.
+    /// Adds the sensor as an obstacle to the specified cell.
     /// </summary>
-    /// <param name="board">The board to which the sensor is added.</param>
-    public void AddObstacle(ref Board board)
+    /// <param name="cell">The <see cref="Cell"/> to which the sensor is added.</param>
+    public void AddObstacle(ref Cell cell)
     {
-        if (Positions != null) board.Grid[Positions.First().X, Positions.First().Y].CurrentObstacle = this;
+        if(Positions != null && Positions.Contains(cell.CellPosition))
+        {
+            cell.CurrentObstacle = this;
+        }
     }
     
     /// <summary>

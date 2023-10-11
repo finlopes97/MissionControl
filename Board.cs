@@ -40,7 +40,7 @@ public class Board
                 {
                     if (obstacle.Positions != null && obstacle.Positions.Contains(new OrderedPair(x, y)))
                     {
-                        Grid[x, y].CurrentObstacle = obstacle;
+                        obstacle.AddObstacle(ref Grid[x,y]);
                     }
                 }
             }

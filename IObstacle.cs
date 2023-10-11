@@ -25,6 +25,6 @@ public interface IObstacle
     /// <summary>
     /// Adds an obstacle to the grid.
     /// </summary>
-    /// <param name="board">The board to add the obstacle to.</param>
-    public void AddObstacle(ref Board board);
+    /// <param name="cell">The <see cref="Cell"/>(s) to add the obstacle to.</param>
+    public void AddObstacle(ref Cell cell);
 }

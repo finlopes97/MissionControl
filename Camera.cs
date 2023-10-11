@@ -52,22 +52,15 @@ public class Camera : IObstacle
     }
     
     /// <summary>
-    /// Adds the camera as an obstacle to the specified board. Looks in the direction specified by <see cref="Direction"/>.
+    /// Adds the camera as an obstacle to the specified cell. Looks in the direction specified by <see cref="Direction"/>.
     /// Extends indefinitely in a cone shape.
     /// </summary>
-    /// <param name="board">The <see cref="Board"/> to which the camera is added.</param>
-    public void AddObstacle(ref Board board)
+    /// <param name="cell">The <see cref="Cell"/> to which the camera is added.</param>
+    public void AddObstacle(ref Cell cell)
     {
-        for (var y = 0; y < board.Cols; y++)
+        if (Positions != null && (Positions.Contains(cell.CellPosition) || InCone(Positions.First(), cell.CellPosition)))
         {
-            for (var x = 0; x < board.Rows; x++)
-            {
-                // If the cell is within the cone of the camera, add the camera to it
-                if (Positions != null && InCone(Positions[0], new OrderedPair(x, y)))
-                {
-                    board.Grid[x, y].CurrentObstacle = this;
-                }
-            }
+            cell.CurrentObstacle = this;
         }
     }
 
