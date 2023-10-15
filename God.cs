@@ -25,45 +25,45 @@ public static class God
     }
         
     /// <summary>
-    /// Checks the board for obstacles and returns a string of safe directions that the agent can move in.
+    /// Checks the board for obstacles and writes a string of safe directions that the agent can move in to the program's output.
     /// </summary>
-    /// <returns>A string of safe directions that the agent can move in.</returns>
     public static void ShowSafeDirections()
     {
         var safeDirections = new List<char> {'N', 'S', 'E', 'W'};
-        var stringOfSafeDirections = "";
+        string? stringOfSafeDirections = null;
         
         Console.WriteLine( "Enter your current location (X,Y):" );
         var position = GetPosition( Console.ReadLine() );
         
-        if (Obstacles.Count == 0)
+        if (Obstacles.Count != 0)
         {
-            Console.WriteLine( "You can safely move in any of the following directions: NSEW" );
-        }
-
-        foreach (var obstacle in Obstacles)
-        {
-            if (obstacle.Positions != null)
+            foreach (var obstacle in Obstacles)
+            {
+                if (obstacle.Positions == null) continue;
+                
                 foreach (var obstaclePosition in obstacle.Positions)
                 {
                     if (position.IsEqual(obstaclePosition))
                     {
                         Console.WriteLine("Agent, your location is compromised. Abort mission.");
+                        return;
                     }
-
+    
                     if (position.X == obstaclePosition.X)
                         safeDirections.Remove(position.Y < obstaclePosition.Y ? 'N' : 'S');
                     else if (position.Y == obstaclePosition.Y)
                         safeDirections.Remove(position.X < obstaclePosition.X ? 'E' : 'W');
                 }
+            }
         }
 
         foreach (var direction in safeDirections)
         {
             stringOfSafeDirections += direction;
         }
-
-        Console.WriteLine("You can safely move in any of the following directions: " + stringOfSafeDirections);
+        
+        if (stringOfSafeDirections == null) { Console.WriteLine( "You cannot safely move in any direction. Abort mission." ); }
+        else { Console.WriteLine( "You can safely take any of the following directions: " + stringOfSafeDirections ); }
     }
     
     /// <summary>

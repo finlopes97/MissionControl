@@ -43,12 +43,11 @@ public class Sensor : IObstacle
         Type = "Sensor";
         SensorRange = sensorRange;
         
-        for (var x = sensorPosition.X - SensorRange; x <= sensorPosition.X + SensorRange; x++)
+        for (var x = sensorPosition.X - (int)SensorRange; x <= sensorPosition.X + (int)SensorRange; x++)
         {
-            for (var y = sensorPosition.Y - SensorRange; y <= sensorPosition.Y + SensorRange; y++)
+            for (var y = sensorPosition.Y - (int)SensorRange; y <= sensorPosition.Y + (int)SensorRange; y++)
             {
-                // throw new NotImplementedException( "Rounding seems to break this, fix later." );
-                var cellPosition = new OrderedPair(Convert.ToInt32(x),Convert.ToInt32(y));
+                var cellPosition = new OrderedPair(x,y);
                 if (CellInRange(sensorPosition, cellPosition))
                 {
                     Positions.Add(cellPosition);
