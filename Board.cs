@@ -8,11 +8,11 @@ public class Board
     /// <summary>
     /// Gets the two-dimensional array representing the grid.
     /// </summary>
-    public Cell[,] Grid { get; }
+    private Cell[,] Grid { get; }
     
-    public int Rows => Grid.GetLength(0);
+    private int Rows => Grid.GetLength(0);
     
-    public int Cols => Grid.GetLength(1);
+    private int Cols => Grid.GetLength(1);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Board"/> class with the specified top-left and bottom-right coordinates.
@@ -25,20 +25,24 @@ public class Board
         if(bottomRight.X <= topLeft.X || bottomRight.Y <= topLeft.Y)
             throw new ArgumentException( "Invalid map specification." );
         
-        var gridWidth = bottomRight.X - topLeft.X;
-        var gridHeight = bottomRight.Y - topLeft.Y;
+        var gridWidth = Math.Abs(bottomRight.X - topLeft.X) + 1;
+        var gridHeight = Math.Abs(bottomRight.Y - topLeft.Y) + 1;
         
-        Grid = new Cell[gridWidth,gridHeight];
+        Grid = new Cell[gridHeight, gridHeight];
         
         for (var y = 0; y < gridHeight; y++)
         {
             for (var x = 0; x < gridWidth; x++)
             {
-                Grid[x, y] = new Cell(new OrderedPair(x,y));
+                var realX = x + topLeft.X;
+                var realY = y + topLeft.Y;
+                
+                Grid[x, y] = new Cell(new OrderedPair(realX, realY));
+                
                 if (obstaclesList == null) continue;
                 foreach (var obstacle in obstaclesList)
                 {
-                    if (obstacle.Positions != null && obstacle.Positions.Contains(new OrderedPair(x, y)))
+                    if (obstacle.Positions != null && obstacle.Positions.Contains(new OrderedPair(realX, realY)))
                     {
                         obstacle.AddObstacle(ref Grid[x,y]);
                     }
