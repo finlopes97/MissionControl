@@ -50,7 +50,7 @@ public static class God
                     }
     
                     if (position.X == obstaclePosition.X)
-                        safeDirections.Remove(position.Y < obstaclePosition.Y ? 'N' : 'S');
+                        safeDirections.Remove(position.Y > obstaclePosition.Y ? 'N' : 'S');
                     else if (position.Y == obstaclePosition.Y)
                         safeDirections.Remove(position.X < obstaclePosition.X ? 'E' : 'W');
                 }
