@@ -5,9 +5,6 @@ namespace MissionControl;
 /// </summary>
 public class Board
 {
-    /// <summary>
-    /// Gets the two-dimensional array representing the grid.
-    /// </summary>
     private Cell[,] Grid { get; }
     private int Width { get; }
     private int Height { get; }
@@ -16,11 +13,11 @@ public class Board
     private List<IObstacle>? Obstacles { get; }
     
     /// <summary>
-    /// Initializes a new instance of the <see cref="Board"/> class with the specified top-left and bottom-right coordinates.
+    /// Initializes a new instance of a <see cref="Board"/> class with the specified top-left and bottom-right coordinates.
     /// </summary>
-    /// <param name="topLeftCell">The top-left coordinates of the grid.</param>
-    /// <param name="bottomRightCell">The bottom-right coordinates of the grid.</param>
-    /// <param name="obstaclesList">List of obstacles that exist in the program.</param>
+    /// <param name="topLeftCell">The top-left coordinates of the grid represented as an <see cref="OrderedPair"/>.</param>
+    /// <param name="bottomRightCell">The bottom-right coordinates of the grid represented as an <see cref="OrderedPair"/>.</param>
+    /// <param name="obstaclesList">List of objects that inherit from the interface <see cref="IObstacle"/>.</param>
     public Board(OrderedPair topLeftCell, OrderedPair bottomRightCell, List<IObstacle>? obstaclesList)
     {
         if (bottomRightCell.X >= topLeftCell.X && bottomRightCell.Y >= topLeftCell.Y)
@@ -38,6 +35,10 @@ public class Board
         Grid = CreateBoard();
     }
 
+    /// <summary>
+    /// Creates the grid by initializing the cells and adding obstacles, if provided.
+    /// </summary>
+    /// <returns>The two-dimensional array of <see cref="Cell"/> objects representing the grid.</returns>
     private Cell[,] CreateBoard()
     {
         Cell[,] grid = new Cell[Width, Height];
