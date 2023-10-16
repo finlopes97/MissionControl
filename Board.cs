@@ -9,46 +9,60 @@ public class Board
     /// Gets the two-dimensional array representing the grid.
     /// </summary>
     private Cell[,] Grid { get; }
+    private int Width { get; }
+    private int Height { get; }
+    private OrderedPair TopLeftCell { get; }
+    private OrderedPair BottomRightCell { get; }
+    private List<IObstacle>? Obstacles { get; }
     
-    private int Rows => Grid.GetLength(0);
-    
-    private int Cols => Grid.GetLength(1);
-
     /// <summary>
     /// Initializes a new instance of the <see cref="Board"/> class with the specified top-left and bottom-right coordinates.
     /// </summary>
-    /// <param name="topLeft">The top-left coordinates of the grid.</param>
-    /// <param name="bottomRight">The bottom-right coordinates of the grid.</param>
+    /// <param name="topLeftCell">The top-left coordinates of the grid.</param>
+    /// <param name="bottomRightCell">The bottom-right coordinates of the grid.</param>
     /// <param name="obstaclesList">List of obstacles that exist in the program.</param>
-    public Board(OrderedPair topLeft, OrderedPair bottomRight, List<IObstacle>? obstaclesList)
+    public Board(OrderedPair topLeftCell, OrderedPair bottomRightCell, List<IObstacle>? obstaclesList)
     {
-        if(bottomRight.X <= topLeft.X || bottomRight.Y <= topLeft.Y)
-            throw new ArgumentException( "Invalid map specification." );
-        
-        var gridWidth = Math.Abs(bottomRight.X - topLeft.X) + 1;
-        var gridHeight = Math.Abs(bottomRight.Y - topLeft.Y) + 1;
-        
-        Grid = new Cell[gridHeight, gridHeight];
-        
-        for (var y = 0; y < gridHeight; y++)
+        if (bottomRightCell.X >= topLeftCell.X && bottomRightCell.Y >= topLeftCell.Y)
+        { 
+            Width = Math.Abs(bottomRightCell.X - topLeftCell.X) + 1;
+            Height = Math.Abs(bottomRightCell.Y - topLeftCell.Y) + 1;
+            TopLeftCell = topLeftCell;
+            BottomRightCell = bottomRightCell;
+            Obstacles = obstaclesList;
+        } else
         {
-            for (var x = 0; x < gridWidth; x++)
+            throw new ArgumentException( "Invalid map specification." );
+        }
+
+        Grid = CreateBoard();
+    }
+
+    private Cell[,] CreateBoard()
+    {
+        Cell[,] grid = new Cell[Width, Height];
+        
+        for (var y = 0; y < Height; y++)
+        {
+            for (var x = 0; x < Width; x++)
             {
-                var realX = x + topLeft.X;
-                var realY = y + topLeft.Y;
+                var realX = x + TopLeftCell.X;
+                var realY = y + TopLeftCell.Y;
                 
-                Grid[x, y] = new Cell(new OrderedPair(realX, realY));
+                grid[x, y] = new Cell(new OrderedPair(realX, realY));
                 
-                if (obstaclesList == null) continue;
-                foreach (var obstacle in obstaclesList)
+                if (Obstacles == null) continue;
+                foreach (var obstacle in Obstacles)
                 {
                     if (obstacle.Positions != null && obstacle.Positions.Contains(new OrderedPair(realX, realY)))
                     {
-                        obstacle.AddObstacle(ref Grid[x,y]);
+                        obstacle.AddObstacle(ref grid[x,y]);
                     }
                 }
             }
         }
+
+        return grid;
     }
     
     /// <summary>
@@ -57,13 +71,13 @@ public class Board
     /// <returns>A string representation of the grid.</returns>
     public override string? ToString()
     {
-        string? gridString = null;
+        var gridString = "";
         
-        for (var y = 0; y < Rows; y++)
+        for (var y = 0; y < Height; y++)
         {
-            for (var x = 0; x < Cols; x++)
+            for (var x = 0; x < Width; x++)
             {
-                if (gridString != null) gridString += Grid[x, y].CellCharCode;
+                gridString += Grid[x, y].CellCharCode;
             }
 
             gridString += "\n";
