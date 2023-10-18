@@ -48,6 +48,12 @@ public static class God
                         Console.WriteLine("Agent, your location is compromised. Abort mission.");
                         return;
                     }
+
+                    if (obstacle is Camera camera && camera.InCone(camera.OriginPosition(), position))
+                    {
+                        Console.WriteLine( "A camera has spotted you agent!" );
+                        return;
+                    }
     
                     if (position.X == obstaclePosition.X)
                         safeDirections.Remove(position.Y > obstaclePosition.Y ? 'N' : 'S');
@@ -64,6 +70,19 @@ public static class God
         
         if (stringOfSafeDirections == null) { Console.WriteLine( "You cannot safely move in any direction. Abort mission." ); }
         else { Console.WriteLine( "You can safely take any of the following directions: " + stringOfSafeDirections ); }
+    }
+    
+    private static bool IsInCameraVision(Camera camera, OrderedPair agentPosition)
+    {
+        if (camera.Positions == null) return false;
+        
+        var vectorToAgent = new OrderedPair(
+            agentPosition.X - camera.Positions[0].X,
+            agentPosition.Y - camera.Positions[0].Y);
+
+        var dotProduct = vectorToAgent.X * camera.Direction.X + vectorToAgent.Y * camera.Direction.Y;
+
+        return dotProduct >= 0;
     }
     
     /// <summary>

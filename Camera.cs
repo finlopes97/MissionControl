@@ -22,7 +22,7 @@ public class Camera : IObstacle
     /// <summary>
     /// Gets or sets the direction of the camera. Represented as an ordered pair (e.g. N=(0,1)).
     /// </summary>
-    public static OrderedPair Direction { get; set; }
+    public OrderedPair Direction { get; private set; }
 
     public Camera(OrderedPair cameraPosition, OrderedPair cameraDirection)
     {
@@ -40,6 +40,19 @@ public class Camera : IObstacle
     {
         CharCode = 'c';
         Type = "Camera";
+    }
+
+    /// <summary>
+    /// Gets the origin position of the <see cref="Camera"/> as an <see cref="OrderedPair"/>.
+    /// </summary>
+    /// <returns>Returns an <see cref="OrderedPair"/> representing the origin.</returns>
+    /// <exception cref="Exception">Throws an exception if object has no positions.</exception>
+    public OrderedPair OriginPosition()
+    {
+        if (Positions == null) 
+            throw new Exception( "Camera object has no positions." );
+        else 
+            return Positions.First();
     }
     
     /// <summary>
@@ -59,13 +72,13 @@ public class Camera : IObstacle
     public void AddObstacle(ref Cell cell)
     {
         if(Positions == null) return;
-        foreach (var position in Positions)
+        foreach (var cameraPosition in Positions)
         {
-            if (InCone(position, cell.CellPosition))
+            if (Positions.Contains(cell.CellPosition))
             {
                 cell.CurrentObstacle = this;
                 break;
-            } if (Positions.Contains(cell.CellPosition))
+            } else if (InCone(cameraPosition, cell.CellPosition))
             {
                 cell.CurrentObstacle = this;
                 break;
@@ -79,7 +92,7 @@ public class Camera : IObstacle
     /// <param name="cameraPosition">The <see cref="OrderedPair"/> that represents the camera's origin position.</param>
     /// <param name="cellPosition">The <see cref="OrderedPair"/> that represents the cell to compare to.</param>
     /// <returns>Returns true if the cell is within the camera's cone of vision, false if the cell is outside of it.</returns>
-    private static bool InCone(OrderedPair cameraPosition, OrderedPair cellPosition)
+    public bool InCone(OrderedPair cameraPosition, OrderedPair cellPosition)
     {
         var vectorToCell = new OrderedPair(
             cellPosition.X - cameraPosition.X, 

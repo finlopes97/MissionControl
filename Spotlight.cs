@@ -66,6 +66,20 @@ public class Spotlight : IObstacle
         
         GenerateSpotlightArea();
     }
+    
+    /// <summary>
+    /// Gets the origin position of the <see cref="Spotlight"/> as an <see cref="OrderedPair"/>.
+    /// </summary>
+    /// <returns>Returns an <see cref="OrderedPair"/> representing the origin.</returns>
+    /// <exception cref="Exception">Throws an exception if object has no positions.</exception>
+    public OrderedPair OriginPosition()
+    {
+        if (Positions == null) 
+            throw new Exception( "Spotlight object has no positions." );
+        else 
+            return Positions.First();
+    }
+
 
     /// <summary>
     /// Generates the area that the spotlight covers and adds it to the list of positions that the obstacle occupies.
