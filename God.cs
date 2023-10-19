@@ -51,6 +51,7 @@ public static class God
 
                     if (obstacle is Camera camera && camera.InCone(camera.OriginPosition(), position))
                     {
+                        // We can probably use this to check the positions of cells in the agent's available directions
                         Console.WriteLine( "A camera has spotted you agent!" );
                         return;
                     }
