@@ -50,11 +50,17 @@ public class Board
                 var realX = x + TopLeftCell.X;
                 var realY = y + TopLeftCell.Y;
                 
-                grid[x, y] = new Cell(new OrderedPair(realX, realY));
+                OrderedPair cellPosition = new OrderedPair(realX, realY);
+                grid[x, y] = new Cell(cellPosition);
                 
                 if (Obstacles == null) continue;
                 foreach (var obstacle in Obstacles)
                 {
+                    if (obstacle is Camera camera && camera.InCone(camera.OriginPosition(), cellPosition))
+                    {
+                        camera.AddObstacle(ref grid[x,y]);
+                    }
+                    
                     if (obstacle.Positions != null && obstacle.Positions.Contains(new OrderedPair(realX, realY)))
                     {
                         obstacle.AddObstacle(ref grid[x,y]);
