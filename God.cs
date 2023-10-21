@@ -43,23 +43,36 @@ public static class God
                 
                 foreach (var obstaclePosition in obstacle.Positions)
                 {
-                    if (position.IsEqual(obstaclePosition))
+                    if (obstacle.IntersectsWithCell(position))
                     {
                         Console.WriteLine( "Agent, your location is compromised. Abort mission." );
                         return;
-                    }
-
-                    if (obstacle is Camera camera && camera.InCone(camera.OriginPosition(), position))
+                    } 
+                    
+                    var count = 4;
+                    while (count != 0)
                     {
-                        // We can probably use this to check the positions of cells in the agent's available directions
-                        Console.WriteLine( "Agent, your location is compromised. Abort mission." );
-                        return;
+                        switch (count)
+                        {
+                            case 4: // Check North cell
+                                if (obstacle.IntersectsWithCell(new OrderedPair(position.X, position.Y - 1)))
+                                    safeDirections.Remove('N');
+                                break;
+                            case 3: // Check East cell
+                                if (obstacle.IntersectsWithCell(new OrderedPair(position.X + 1, position.Y)))
+                                    safeDirections.Remove('E');
+                                break;
+                            case 2: // Check South cell
+                                if (obstacle.IntersectsWithCell(new OrderedPair(position.X, position.Y + 1)))
+                                    safeDirections.Remove('S');
+                                break;
+                            case 1: // Check West cell
+                                if (obstacle.IntersectsWithCell(new OrderedPair(position.X - 1, position.Y)))
+                                    safeDirections.Remove('W');
+                                break;
+                        }
+                        count--;
                     }
-    
-                    if (position.X == obstaclePosition.X)
-                        safeDirections.Remove(position.Y > obstaclePosition.Y ? 'N' : 'S');
-                    else if (position.Y == obstaclePosition.Y)
-                        safeDirections.Remove(position.X < obstaclePosition.X ? 'E' : 'W');
                 }
             }
         }

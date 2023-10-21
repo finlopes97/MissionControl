@@ -5,6 +5,9 @@ namespace MissionControl;
 /// </summary>
 public interface IObstacle
 {
+    /// <summary>
+    /// Gets the position of the obstacle as a list of ordered pairs.
+    /// </summary>
     public List<OrderedPair>? Positions { get; set; }
     
     /// <summary>
@@ -27,4 +30,10 @@ public interface IObstacle
     /// </summary>
     /// <param name="cell">The <see cref="Cell"/>(s) to add the obstacle to.</param>
     public void AddObstacle(ref Cell cell);
+
+    /// <summary>
+    /// Determines whether the specified cell is within the obstacle.
+    /// </summary>
+    /// <param name="cellToCheck">The <see cref="Cell"/> to compare against the obstacle's position and range of detection.</param>
+    public bool IntersectsWithCell(OrderedPair cellToCheck);
 }

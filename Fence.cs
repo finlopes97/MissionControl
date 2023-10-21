@@ -5,6 +5,9 @@ namespace MissionControl;
 /// </summary>
 public class Fence : IObstacle
 {
+    /// <summary>
+    /// Gets the position of the fence as a list of ordered pairs.
+    /// </summary>
     public List<OrderedPair>? Positions { get; set; }
     
     /// <summary>
@@ -22,12 +25,26 @@ public class Fence : IObstacle
     /// </summary>
     public int Priority => 1;
 
+    /// <summary>
+    /// Adds a fence to the grid.
+    /// </summary>
+    /// <param name="cell">The cell to add the fence to.</param>
     public void AddObstacle(ref Cell cell)
     {
         if (Positions != null && Positions.Contains(cell.CellPosition))
         {
             cell.CurrentObstacle = this;
         }
+    }
+    
+    /// <summary>
+    /// Checks if the fence obstacle intersects with a specified cell.
+    /// </summary>
+    /// <param name="cellToCheck">The cell to check for intersection.</param>
+    /// <returns>True if the fence intersects with the cell, otherwise false.</returns>
+    public bool IntersectsWithCell(OrderedPair cellToCheck)
+    {
+        return Positions != null && Positions.Contains(cellToCheck);
     }
     
     /// <summary>
@@ -40,7 +57,7 @@ public class Fence : IObstacle
     }
     
     /// <summary>
-    /// Initializes a new instance of the <see cref="Fence"/> class with the specified starting and ending positions.
+    /// Initializes a new instance of the fence class with the specified starting and ending positions.
     /// </summary>
     /// <param name="fenceStartingPosition">The starting position of the fence as an ordered pair.</param>
     /// <param name="fenceEndingPosition">The ending position of the fence as an ordered pair.</param>
@@ -91,7 +108,7 @@ public class Fence : IObstacle
     }
     
     /// <summary>
-    /// Initialises a new instance of the <see cref="Fence"/> class with no additional parameters.
+    /// Initialises a new instance of the fence class with no additional parameters.
     /// Specifically for generating a dynamic list in the main menu, not for use in the actual program.
     /// </summary>
     public Fence()

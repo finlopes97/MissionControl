@@ -5,11 +5,34 @@ namespace MissionControl;
 /// </summary>
 public class Board
 {
+    /// <summary>
+    /// Gets the two-dimensional array of <see cref="Cell"/> objects representing the grid.
+    /// </summary>
     private Cell[,] Grid { get; }
+
+    /// <summary>
+    /// Gets the width of the grid.
+    /// </summary>
     private int Width { get; }
+
+    /// <summary>
+    /// Gets the height of the grid.
+    /// </summary>
     private int Height { get; }
+
+    /// <summary>
+    /// Gets the top-left cell's coordinates of the grid represented as an <see cref="OrderedPair"/>.
+    /// </summary>
     private OrderedPair TopLeftCell { get; }
+
+    /// <summary>
+    /// Gets the bottom-right cell's coordinates of the grid represented as an <see cref="OrderedPair"/>.
+    /// </summary>
     private OrderedPair BottomRightCell { get; }
+
+    /// <summary>
+    /// Gets a list of objects that inherit from the interface <see cref="IObstacle"/>.
+    /// </summary>
     private List<IObstacle>? Obstacles { get; }
     
     /// <summary>
@@ -17,7 +40,7 @@ public class Board
     /// </summary>
     /// <param name="topLeftCell">The top-left coordinates of the grid represented as an <see cref="OrderedPair"/>.</param>
     /// <param name="bottomRightCell">The bottom-right coordinates of the grid represented as an <see cref="OrderedPair"/>.</param>
-    /// <param name="obstaclesList">List of objects that inherit from the interface <see cref="IObstacle"/>.</param>
+    /// <param name="obstaclesList">List of obstacles that inherit from the interface <see cref="IObstacle"/>.</param>
     public Board(OrderedPair topLeftCell, OrderedPair bottomRightCell, List<IObstacle>? obstaclesList)
     {
         if (bottomRightCell.X >= topLeftCell.X && bottomRightCell.Y >= topLeftCell.Y)

@@ -48,25 +48,20 @@ public class Spotlight : IObstacle
             cell.CurrentObstacle = this;
         }
     }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Spotlight"/> class with a specified position, direction and range.
-    /// </summary>
-    /// <param name="spotlightPosition">An <see cref="OrderedPair"/> endPoint position of the spotlight.</param>
-    /// <param name="spotlightDirection">An <see cref="OrderedPair"/> that represents the direction that the spotlight is facing in.</param>
-    /// <param name="spotlightRange">A <see cref="System.Double"/> the offset between the spotlight's endPoint point and the end of its range.</param>
-    public Spotlight(OrderedPair spotlightPosition, OrderedPair spotlightDirection, double spotlightRange)
-    {
-        Positions = new List<OrderedPair>() { spotlightPosition };
-        CharCode = 'l';
-        Type = "Spotlight";
-
-        SpotlightDirection = spotlightDirection;
-        SpotlightRange = spotlightRange;
-        
-        GenerateSpotlightArea();
-    }
     
+    public bool IntersectsWithCell(OrderedPair cellToCheck)
+    {
+        if (Positions == null) return false;
+
+        foreach (var position in Positions)
+        {
+            if (Positions.Contains(cellToCheck))
+                return true;
+        }
+
+        return false;
+    }
+
     /// <summary>
     /// Gets the origin position of the <see cref="Spotlight"/> as an <see cref="OrderedPair"/>.
     /// </summary>
@@ -79,7 +74,6 @@ public class Spotlight : IObstacle
         else 
             return Positions.First();
     }
-
 
     /// <summary>
     /// Generates the area that the spotlight covers and adds it to the list of positions that the obstacle occupies.
@@ -127,6 +121,33 @@ public class Spotlight : IObstacle
     }
         
     /// <summary>
+    /// Builds a string for use in the main menu
+    /// </summary>
+    /// <returns>A string to be used when printing the main menu of the program.</returns>
+    public override string ToString()
+    {
+        return $"{CharCode}) Add '{Type}' obstacle.";
+    }
+    
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Spotlight"/> class with a specified position, direction and range.
+    /// </summary>
+    /// <param name="spotlightPosition">An <see cref="OrderedPair"/> endPoint position of the spotlight.</param>
+    /// <param name="spotlightDirection">An <see cref="OrderedPair"/> that represents the direction that the spotlight is facing in.</param>
+    /// <param name="spotlightRange">A <see cref="System.Double"/> the offset between the spotlight's endPoint point and the end of its range.</param>
+    public Spotlight(OrderedPair spotlightPosition, OrderedPair spotlightDirection, double spotlightRange)
+    {
+        Positions = new List<OrderedPair>() { spotlightPosition };
+        CharCode = 'l';
+        Type = "Spotlight";
+
+        SpotlightDirection = spotlightDirection;
+        SpotlightRange = spotlightRange;
+        
+        GenerateSpotlightArea();
+    }
+        
+    /// <summary>
     /// Initialises a new instance of the <see cref="Spotlight"/> class with no additional parameters.
     /// Specifically for generating a dynamic list in the main menu, not for use in the actual program.
     /// </summary>
@@ -134,14 +155,5 @@ public class Spotlight : IObstacle
     {
         CharCode = 'l';
         Type = "Spotlight";
-    }
-    
-    /// <summary>
-    /// Builds a string for use in the main menu
-    /// </summary>
-    /// <returns>A string to be used when printing the main menu of the program.</returns>
-    public override string ToString()
-    {
-        return $"{CharCode}) Add '{Type}' obstacle.";
     }
 }

@@ -6,7 +6,7 @@ namespace MissionControl;
 public class Guard : IObstacle
 {
     /// <summary>
-    /// Gets the position of the guard as an ordered pair.
+    /// Gets the position of the guard as a list of ordered pairs.
     /// </summary>
     public List<OrderedPair>? Positions { get; set; }
     
@@ -28,7 +28,7 @@ public class Guard : IObstacle
     /// <summary>
     /// Adds a guard to the grid.
     /// </summary>
-    /// <param name="cell">The <see cref="Cell"/> to add the guard to.</param>
+    /// <param name="cell">The cell to add the guard to.</param>
     public void AddObstacle(ref Cell cell)
     {
         if (Positions != null)
@@ -36,9 +36,33 @@ public class Guard : IObstacle
             cell.CurrentObstacle = this;
         }
     }
+    
+    /// <summary>
+    /// Checks if the guard obstacle intersects with a specified cell.
+    /// </summary>
+    /// <param name="cellToCheck">The cell to check for intersection.</param>
+    /// <returns>True if the guard intersects with the cell, otherwise false.</returns>
+    public bool IntersectsWithCell(OrderedPair cellToCheck)
+    {
+        if (Positions == null) return false;
+        
+        if (Positions.Contains(cellToCheck))
+            return true;
+        else
+            return false;
+    }
+    
+    /// <summary>
+    /// Builds a string for use in the main menu
+    /// </summary>
+    /// <returns>A string to be used when printing the main menu of the program.</returns>
+    public override string ToString()
+    {
+        return $"{CharCode}) Add '{Type}' obstacle.";
+    }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Guard"/> class with the specified position.
+    /// Initializes a new instance of the guard class with the specified position.
     /// </summary>
     /// <param name="guardPosition">The position of the guard as an ordered pair.</param>
     public Guard(OrderedPair guardPosition)
@@ -49,21 +73,12 @@ public class Guard : IObstacle
     }
 
     /// <summary>
-    /// Initialises a new instance of the <see cref="Guard"/> class with no additional parameters.
+    /// Initialises a new instance of the guard class with no additional parameters.
     /// Specifically for generating a dynamic list in the main menu, not for use in the actual program.
     /// </summary>
     public Guard()
     {
         CharCode = 'g';
         Type = "Guard";
-    }
-        
-    /// <summary>
-    /// Builds a string for use in the main menu
-    /// </summary>
-    /// <returns>A string to be used when printing the main menu of the program.</returns>
-    public override string ToString()
-    {
-        return $"{CharCode}) Add '{Type}' obstacle.";
     }
 }

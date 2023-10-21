@@ -32,7 +32,63 @@ public class Sensor : IObstacle
     private static double SensorRange { get; set; }
     
     /// <summary>
-    /// Initializes a new instance of the <see cref="Sensor"/> class with specified position and range.
+    /// Adds the sensor as an obstacle to the specified cell.
+    /// </summary>
+    /// <param name="cell">The <see cref="Cell"/> to which the sensor is added.</param>
+    public void AddObstacle(ref Cell cell)
+    {
+        if(Positions != null && Positions.Contains(cell.CellPosition))
+        {
+            cell.CurrentObstacle = this;
+        }
+    }
+    
+    /// <summary>
+    /// Checks if a cell intersects with the sensor or if it is in the sensor's range.
+    /// </summary>
+    /// <param name="cellToCheck">The cell to check for intersection.</param>
+    /// <returns>True if the sensor intersects with the cell, otherwise false.</returns>
+    public bool IntersectsWithCell(OrderedPair cellToCheck)
+    {
+        return Positions != null && Positions.Contains(cellToCheck);
+    }
+    
+    /// <summary>
+    /// Gets the origin position of the sensor.
+    /// </summary>
+    /// <returns>Returns the origin position of the sensor.</returns>
+    /// <exception cref="Exception">Throws an exception if object has no positions.</exception>
+    public OrderedPair OriginPosition()
+    {
+        return (Positions ?? throw new InvalidOperationException( "Sensor has no positions." )).First();
+    }
+    
+    /// <summary>
+    /// Determines if a given cell is within the sensor's range.
+    /// </summary>
+    /// <param name="sensorPosition">The sensor's position.</param>
+    /// <param name="cellPosition">The position of the cell to check.</param>
+    /// <returns>True if the cell is within range; otherwise, false.</returns>
+    private static bool CellInRange(OrderedPair sensorPosition, OrderedPair cellPosition)
+    {
+        var distanceBetweenCells = Math.Sqrt(
+            Math.Pow(cellPosition.X - sensorPosition.X, 2) +
+            Math.Pow(cellPosition.Y - sensorPosition.Y, 2));
+        
+        return distanceBetweenCells <= SensorRange;
+    }
+        
+    /// <summary>
+    /// Returns a string representation of the sensor.
+    /// </summary>
+    /// <returns>A string in the format "{CharCode}) Add '{Type}' obstacle."</returns>
+    public override string ToString()
+    {
+        return $"{CharCode}) Add '{Type}' obstacle.";
+    }
+    
+    /// <summary>
+    /// Initializes a new instance of the sensor class with specified position and range.
     /// </summary>
     /// <param name="sensorPosition">The initial position of the sensor.</param>
     /// <param name="sensorRange">The range within which the sensor can detect obstacles.</param>
@@ -57,76 +113,11 @@ public class Sensor : IObstacle
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Sensor"/> class with default values.
+    /// Initializes a new instance of the sensor class with default values.
     /// </summary>
     public Sensor()
     {
         CharCode = 's';
         Type = "Sensor";
-    }
-    
-    /// <summary>
-    /// Gets the origin position of the <see cref="Sensor"/> as an <see cref="OrderedPair"/>.
-    /// </summary>
-    /// <returns>Returns an <see cref="OrderedPair"/> representing the origin.</returns>
-    /// <exception cref="Exception">Throws an exception if object has no positions.</exception>
-    public OrderedPair OriginPosition()
-    {
-        if (Positions == null) 
-            throw new Exception( "Sensor object has no positions." );
-        else 
-            return Positions.First();
-    }
-
-    
-    /// <summary>
-    /// Adds the sensor as an obstacle to the specified cell.
-    /// </summary>
-    /// <param name="cell">The <see cref="Cell"/> to which the sensor is added.</param>
-    public void AddObstacle(ref Cell cell)
-    {
-        if(Positions != null && Positions.Contains(cell.CellPosition))
-        {
-            cell.CurrentObstacle = this;
-        }
-    }
-    
-    /// <summary>
-    /// Determines if a given cell is within the sensor's range.
-    /// </summary>
-    /// <param name="sensorPosition">The sensor's position.</param>
-    /// <param name="cellPosition">The position of the cell to check.</param>
-    /// <returns>True if the cell is within range; otherwise, false.</returns>
-    private static bool CellInRange(OrderedPair sensorPosition, OrderedPair cellPosition)
-    {
-        var distanceBetweenCells = Math.Sqrt(
-            Math.Pow(cellPosition.X - sensorPosition.X, 2) +
-            Math.Pow(cellPosition.Y - sensorPosition.Y, 2));
-        
-        return distanceBetweenCells <= SensorRange;
-    }
-    
-    /// <summary>
-    /// Generates a list of positions within the sensor's range.
-    /// </summary>
-    /// <returns>A string containing a list of positions, one per line.</returns>
-    public string ListOfPositions()
-    {
-        var output = "";
-        if (Positions == null) return "Positions is null";
-        foreach (var position in Positions)
-        {
-            output += position.ToString() + '\n';
-        }
-        return output;
-    }
-    
-    /// <summary>
-    /// Returns a string representation of the sensor.
-    /// </summary>
-    /// <returns>A string in the format "{CharCode}) Add '{Type}' obstacle."</returns>
-    public override string ToString()
-    {
-        return $"{CharCode}) Add '{Type}' obstacle.";
     }
 }

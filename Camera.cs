@@ -24,23 +24,6 @@ public class Camera : IObstacle
     /// </summary>
     public OrderedPair Direction { get; private set; }
 
-    public Camera(OrderedPair cameraPosition, OrderedPair cameraDirection)
-    {
-        Positions = new List<OrderedPair>() { cameraPosition };
-        CharCode = 'c';
-        Type = "Camera";
-        Direction = cameraDirection;
-    }
-    
-    /// <summary>
-    /// Initialises a new instance of the <see cref="Camera"/> class with no additional parameters.
-    /// Specifically for generating a dynamic list in the main menu, not for use in the actual program.
-    /// </summary>
-    public Camera()
-    {
-        CharCode = 'c';
-        Type = "Camera";
-    }
 
     /// <summary>
     /// Gets the origin position of the <see cref="Camera"/> as an <see cref="OrderedPair"/>.
@@ -53,15 +36,6 @@ public class Camera : IObstacle
             throw new Exception( "Camera object has no positions." );
         else 
             return Positions.First();
-    }
-    
-    /// <summary>
-    /// Builds a string for use in the main menu
-    /// </summary>
-    /// <returns>A string to be used when printing the main menu of the program.</returns>
-    public override string ToString()
-    {
-        return $"{CharCode}) Add '{Type}' obstacle.";
     }
     
     /// <summary>
@@ -78,12 +52,29 @@ public class Camera : IObstacle
         else if (InCone(OriginPosition(), cell.CellPosition))
             cell.CurrentObstacle = this;
     }
+    
+    /// <summary>
+    /// Checks if a cell intersects with the camera or if it is in the camera's cone of vision.
+    /// </summary>
+    /// <param name="cellToCheck">The cell to check for intersection.</param>
+    /// <returns>True if the camera intersects with the cell, otherwise false.</returns>
+    public bool IntersectsWithCell(OrderedPair cellToCheck)
+    {
+        if (Positions == null) return false;
+        
+        if (Positions.Contains(cellToCheck))
+            return true;
+        else if (InCone(OriginPosition(), cellToCheck))
+            return true;
+        else
+            return false;
+    }
 
     /// <summary>
-    /// Checks the cells in front of the camera in an infinite range, in a 45 degree cone, based on the <see cref="Direction"/> of the camera.
+    /// Checks the cells in front of the camera in an infinite range, in a 45 degree cone, based on the direction of the camera.
     /// </summary>
-    /// <param name="cameraPosition">The <see cref="OrderedPair"/> that represents the camera's origin position.</param>
-    /// <param name="cellPosition">The <see cref="OrderedPair"/> that represents the cell to compare to.</param>
+    /// <param name="cameraPosition">The camera's initial position.</param>
+    /// <param name="cellPosition">The position of the cell to compare to.</param>
     /// <returns>Returns true if the cell is within the camera's cone of vision, false if the cell is outside of it.</returns>
     public bool InCone(OrderedPair cameraPosition, OrderedPair cellPosition)
     {
@@ -102,5 +93,37 @@ public class Camera : IObstacle
         const double halfConeAngle = Math.PI / 4;
 
         return Math.Abs(angleDifference) <= halfConeAngle;
+    }
+    
+    /// <summary>
+    /// Builds a string for use in the main menu
+    /// </summary>
+    /// <returns>A string to be used when printing the main menu of the program.</returns>
+    public override string ToString()
+    {
+        return $"{CharCode}) Add '{Type}' obstacle.";
+    }
+    
+    /// <summary>
+    /// Initializes a new instance of the camera class with the specified position and direction.
+    /// </summary>
+    /// <param name="cameraPosition">The initial position of the camera.</param>
+    /// <param name="cameraDirection">The direction that the camera is facing in.</param>
+    public Camera(OrderedPair cameraPosition, OrderedPair cameraDirection)
+    {
+        Positions = new List<OrderedPair>() { cameraPosition };
+        CharCode = 'c';
+        Type = "Camera";
+        Direction = cameraDirection;
+    }
+    
+    /// <summary>
+    /// Initialises a new instance of the camera class with no additional parameters.
+    /// Specifically for generating a dynamic list in the main menu, not for use in the actual program.
+    /// </summary>
+    public Camera()
+    {
+        CharCode = 'c';
+        Type = "Camera";
     }
 }
