@@ -1,2 +1,6 @@
 /obj/*
 /obj/Debug/*
+/bin/*
+/*.zip
+/.idea/*
+*.user
