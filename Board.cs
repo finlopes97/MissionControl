@@ -56,7 +56,7 @@ public class Board
                 if (Obstacles == null) continue;
                 foreach (var obstacle in Obstacles)
                 {
-                    if (obstacle is Camera camera && Camera.InCone(camera.OriginPosition(), cellPosition))
+                    if (obstacle is Camera camera && camera.InCone(camera.OriginPosition(), cellPosition))
                     {
                         camera.AddObstacle(ref grid[x,y]);
                     }

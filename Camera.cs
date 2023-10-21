@@ -72,18 +72,11 @@ public class Camera : IObstacle
     public void AddObstacle(ref Cell cell)
     {
         if(Positions == null) return;
-        foreach (var cameraPosition in Positions)
-        {
-            if (Positions.Contains(cell.CellPosition))
-            {
-                cell.CurrentObstacle = this;
-                break;
-            } else if (InCone(cameraPosition, cell.CellPosition))
-            {
-                cell.CurrentObstacle = this;
-                break;
-            }
-        }
+
+        if (Positions.Contains(cell.CellPosition))
+            cell.CurrentObstacle = this;
+        else if (InCone(OriginPosition(), cell.CellPosition))
+            cell.CurrentObstacle = this;
     }
 
     /// <summary>
@@ -92,26 +85,22 @@ public class Camera : IObstacle
     /// <param name="cameraPosition">The <see cref="OrderedPair"/> that represents the camera's origin position.</param>
     /// <param name="cellPosition">The <see cref="OrderedPair"/> that represents the cell to compare to.</param>
     /// <returns>Returns true if the cell is within the camera's cone of vision, false if the cell is outside of it.</returns>
-    public static bool InCone(OrderedPair cameraPosition, OrderedPair cellPosition)
+    public bool InCone(OrderedPair cameraPosition, OrderedPair cellPosition)
     {
         var vectorToCell = new OrderedPair(
             cellPosition.X - cameraPosition.X, 
             cellPosition.Y - cameraPosition.Y);
 
-        var angle = Math.Atan2(vectorToCell.Y, vectorToCell.X);
+        var angleToCell = Math.Atan2(vectorToCell.Y, vectorToCell.X);
+        var angleToDirection = Math.Atan2(Direction.Y, Direction.X);
+        
+        var angleDifference = angleToCell - angleToDirection;
 
-        while (angle > Math.PI) angle -= 2 * Math.PI;
-        while (angle <= -Math.PI) angle += 2 * Math.PI;
+        while (angleDifference > Math.PI) angleDifference -= 2 * Math.PI;
+        while (angleDifference <= -Math.PI) angleDifference += 2 * Math.PI;
 
-        var halfConeAngle = Math.PI / 4;
+        const double halfConeAngle = Math.PI / 4;
 
-        return Math.Abs(angle) <= halfConeAngle;
-
-        // var dotProduct = (vectorToCell.X * Direction.X + vectorToCell.Y * Direction.Y) /
-        //                  (vectorToCell.Length() * Direction.Length());
-        //
-        // var halfConeAngleCosine = Math.Cos(Math.PI / 8);
-        //
-        // return dotProduct >= halfConeAngleCosine;
+        return Math.Abs(angleDifference) <= halfConeAngle;
     }
 }
