@@ -45,14 +45,14 @@ public static class God
                 {
                     if (position.IsEqual(obstaclePosition))
                     {
-                        Console.WriteLine("Agent, your location is compromised. Abort mission.");
+                        Console.WriteLine( "Agent, your location is compromised. Abort mission." );
                         return;
                     }
 
-                    if (obstacle is Camera camera && camera.InCone(camera.OriginPosition(), position))
+                    if (obstacle is Camera camera && Camera.InCone(camera.OriginPosition(), position))
                     {
                         // We can probably use this to check the positions of cells in the agent's available directions
-                        Console.WriteLine( "A camera has spotted you agent!" );
+                        Console.WriteLine( "Agent, your location is compromised. Abort mission." );
                         return;
                     }
     

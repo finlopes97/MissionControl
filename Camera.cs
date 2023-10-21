@@ -92,17 +92,26 @@ public class Camera : IObstacle
     /// <param name="cameraPosition">The <see cref="OrderedPair"/> that represents the camera's origin position.</param>
     /// <param name="cellPosition">The <see cref="OrderedPair"/> that represents the cell to compare to.</param>
     /// <returns>Returns true if the cell is within the camera's cone of vision, false if the cell is outside of it.</returns>
-    public bool InCone(OrderedPair cameraPosition, OrderedPair cellPosition)
+    public static bool InCone(OrderedPair cameraPosition, OrderedPair cellPosition)
     {
         var vectorToCell = new OrderedPair(
             cellPosition.X - cameraPosition.X, 
             cellPosition.Y - cameraPosition.Y);
 
-        var dotProduct = (vectorToCell.X * Direction.X + vectorToCell.Y * Direction.Y) /
-                         (vectorToCell.Length() * Direction.Length());
-        
-        var halfConeAngleCosine = Math.Cos(Math.PI / 8);
-        
-        return dotProduct >= halfConeAngleCosine;
+        var angle = Math.Atan2(vectorToCell.Y, vectorToCell.X);
+
+        while (angle > Math.PI) angle -= 2 * Math.PI;
+        while (angle <= -Math.PI) angle += 2 * Math.PI;
+
+        var halfConeAngle = Math.PI / 4;
+
+        return Math.Abs(angle) <= halfConeAngle;
+
+        // var dotProduct = (vectorToCell.X * Direction.X + vectorToCell.Y * Direction.Y) /
+        //                  (vectorToCell.Length() * Direction.Length());
+        //
+        // var halfConeAngleCosine = Math.Cos(Math.PI / 8);
+        //
+        // return dotProduct >= halfConeAngleCosine;
     }
 }
