@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace MissionControl;
 
 /// <summary>
@@ -24,6 +26,10 @@ public class Fence : IObstacle
     /// Determines the list position in which this obstacle appears in the main menu.
     /// </summary>
     public int Priority => 1;
+    
+    private OrderedPair FenceStartingPosition { get; }
+    
+    private OrderedPair FenceEndingPosition { get; }
 
     /// <summary>
     /// Adds a fence to the grid.
@@ -45,6 +51,44 @@ public class Fence : IObstacle
     public bool IntersectsWithCell(OrderedPair cellToCheck)
     {
         return Positions != null && Positions.Contains(cellToCheck);
+    }
+
+    private List<OrderedPair> Points()
+    {
+        int numPoints;
+        var points = new List<OrderedPair>();
+        
+        var startX = FenceStartingPosition.X;
+        var startY = FenceStartingPosition.Y;
+        var endX = FenceEndingPosition.X;
+        var endY = FenceEndingPosition.Y;
+        
+        if (startX == endX) // Vertical fence
+        {
+            numPoints = Math.Abs(endY - startY) + 1;
+
+            for (var i = 0; i < numPoints; i++)
+            {
+                var currentY = Math.Min(startY, endY) + i;
+                points.Add(new OrderedPair(startX, currentY));
+            }
+        }
+        else if (startY == endY) // Horizontal fence
+        {
+            numPoints = Math.Abs(endX - startX) + 1;
+
+            for (var i = 0; i < numPoints; i++)
+            {
+                var currentX = Math.Min(startX, endX) + i;
+                points.Add(new OrderedPair(currentX, startY));
+            }
+        }
+        else
+        {
+            throw new ArgumentException("Fences must be horizontal or vertical.");
+        }
+
+        return points;
     }
     
     /// <summary>
@@ -68,41 +112,10 @@ public class Fence : IObstacle
         {
             throw new ArgumentException("Fences must be horizontal or vertical.");
         }
-        
-        int numPoints;
-        var points = new List<OrderedPair>();
-        
-        var startX = fenceStartingPosition.X;
-        var startY = fenceStartingPosition.Y;
-        var endX = fenceEndingPosition.X;
-        var endY = fenceEndingPosition.Y;
-        
-        if (startX == endX) // Vertical fence
-        {
-            numPoints = Math.Abs(endY - startY) + 1;
 
-            for (int i = 0; i < numPoints; i++)
-            {
-                int currentY = Math.Min(startY, endY) + i;
-                points.Add(new OrderedPair(startX, currentY));
-            }
-        }
-        else if (startY == endY) // Horizontal fence
-        {
-            numPoints = Math.Abs(endX - startX) + 1;
-
-            for (int i = 0; i < numPoints; i++)
-            {
-                int currentX = Math.Min(startX, endX) + i;
-                points.Add(new OrderedPair(currentX, startY));
-            }
-        }
-        else
-        {
-            throw new ArgumentException("Fences must be horizontal or vertical.");
-        }
-        
-        Positions = points;
+        FenceStartingPosition = fenceStartingPosition;
+        FenceEndingPosition = fenceEndingPosition;
+        Positions = Points();
         CharCode = 'f';
         Type = "Fence";
     }

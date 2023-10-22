@@ -29,75 +29,53 @@ public static class God
     /// </summary>
     public static void ShowSafeDirections()
     {
-        var safeDirections = new List<char> {'N', 'S', 'E', 'W'};
-        string? stringOfSafeDirections = null;
+        var safeDirections = new HashSet<char> {'N', 'S', 'E', 'W'};
         
         Console.WriteLine( "Enter your current location (X,Y):" );
         var position = GetPosition( Console.ReadLine() );
-        
-        if (Obstacles.Count != 0)
+
+        foreach (var obstacle in Obstacles)
         {
-            foreach (var obstacle in Obstacles)
+            if (obstacle.Positions == null) continue;
+
+            if (obstacle.IntersectsWithCell(position))
             {
-                if (obstacle.Positions == null) continue;
-                
-                foreach (var obstaclePosition in obstacle.Positions)
-                {
-                    if (obstacle.IntersectsWithCell(position))
-                    {
-                        Console.WriteLine( "Agent, your location is compromised. Abort mission." );
-                        return;
-                    } 
-                    
-                    var count = 4;
-                    while (count != 0)
-                    {
-                        switch (count)
-                        {
-                            case 4: // Check North cell
-                                if (obstacle.IntersectsWithCell(new OrderedPair(position.X, position.Y - 1)))
-                                    safeDirections.Remove('N');
-                                break;
-                            case 3: // Check East cell
-                                if (obstacle.IntersectsWithCell(new OrderedPair(position.X + 1, position.Y)))
-                                    safeDirections.Remove('E');
-                                break;
-                            case 2: // Check South cell
-                                if (obstacle.IntersectsWithCell(new OrderedPair(position.X, position.Y + 1)))
-                                    safeDirections.Remove('S');
-                                break;
-                            case 1: // Check West cell
-                                if (obstacle.IntersectsWithCell(new OrderedPair(position.X - 1, position.Y)))
-                                    safeDirections.Remove('W');
-                                break;
-                        }
-                        count--;
-                    }
-                }
+                Console.WriteLine("Agent, your location is compromised. Abort mission.");
+                return;
             }
+
+            if (obstacle.IntersectsWithCell(new OrderedPair(position.X, position.Y - 1))) // North
+                safeDirections.Remove('N');
+            if (obstacle.IntersectsWithCell(new OrderedPair(position.X, position.Y + 1))) // South
+                safeDirections.Remove('S');
+            if (obstacle.IntersectsWithCell(new OrderedPair(position.X + 1, position.Y))) // East
+                safeDirections.Remove('E');
+            if (obstacle.IntersectsWithCell(new OrderedPair(position.X - 1, position.Y))) // West
+                safeDirections.Remove('W');
         }
 
-        foreach (var direction in safeDirections)
+        if (safeDirections.Count == 0)
         {
-            stringOfSafeDirections += direction;
+            Console.WriteLine( "You cannot safely move in any direction. Abort mission." );
         }
-        
-        if (stringOfSafeDirections == null) { Console.WriteLine( "You cannot safely move in any direction. Abort mission." ); }
-        else { Console.WriteLine( "You can safely take any of the following directions: " + stringOfSafeDirections ); }
+        else
+        {
+            Console.WriteLine( "You can safely take any of the following directions: " + string.Join("", safeDirections));
+        }
     }
     
-    private static bool IsInCameraVision(Camera camera, OrderedPair agentPosition)
-    {
-        if (camera.Positions == null) return false;
-        
-        var vectorToAgent = new OrderedPair(
-            agentPosition.X - camera.Positions[0].X,
-            agentPosition.Y - camera.Positions[0].Y);
-
-        var dotProduct = vectorToAgent.X * camera.Direction.X + vectorToAgent.Y * camera.Direction.Y;
-
-        return dotProduct >= 0;
-    }
+    // private static bool IsInCameraVision(Camera camera, OrderedPair agentPosition)
+    // {
+    //     if (camera.Positions == null) return false;
+    //     
+    //     var vectorToAgent = new OrderedPair(
+    //         agentPosition.X - camera.Positions[0].X,
+    //         agentPosition.Y - camera.Positions[0].Y);
+    //
+    //     var dotProduct = vectorToAgent.X * camera.Direction.X + vectorToAgent.Y * camera.Direction.Y;
+    //
+    //     return dotProduct >= 0;
+    // }
     
     /// <summary>
     /// Adds a guard to the list of obstacles based on user input.
