@@ -63,19 +63,26 @@ public static class God
             Console.WriteLine( "You can safely take any of the following directions: " + string.Join("", safeDirections));
         }
     }
-    
-    // private static bool IsInCameraVision(Camera camera, OrderedPair agentPosition)
-    // {
-    //     if (camera.Positions == null) return false;
-    //     
-    //     var vectorToAgent = new OrderedPair(
-    //         agentPosition.X - camera.Positions[0].X,
-    //         agentPosition.Y - camera.Positions[0].Y);
-    //
-    //     var dotProduct = vectorToAgent.X * camera.Direction.X + vectorToAgent.Y * camera.Direction.Y;
-    //
-    //     return dotProduct >= 0;
-    // }
+
+    /// <summary>
+    /// Finds a safe path from the agent's current location to the mission objective.
+    /// </summary>
+    public static void FindSafePath()
+    {
+        Console.WriteLine( "Enter your current location (X,Y):" );
+        var playerCell = new Cell(GetPosition(Console.ReadLine()));
+        Console.WriteLine( "Enter the location of the mission objective (X,Y):" );
+        var objectiveCell = new Cell(GetPosition(Console.ReadLine()));
+
+        var path = Pathfinding.GenerateSafeDirections();
+        Console.WriteLine( "The following path will take you to the objective: " );
+        foreach (var cell in path)
+        {
+            Console.Write( cell.MoveDirection );
+        }
+    }
+
+
     
     /// <summary>
     /// Adds a guard to the list of obstacles based on user input.

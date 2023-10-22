@@ -73,6 +73,9 @@ public static class Program
             case 'm':
                 God.CreateBoard();
                 break;
+            case 'p':
+                God.FindSafePath();
+                break;
             case 'x':
                 God.ExitProgram();
                 break;

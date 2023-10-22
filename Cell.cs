@@ -30,6 +30,30 @@ public class Cell
     public char CellCharCode { get; private set; } 
     
     /// <summary>
+    /// The cost of moving to this cell.
+    /// </summary>
+    public int GCost { get; set; }
+    
+    /// <summary>
+    /// The estimated cost of moving from this cell to the goal.
+    /// </summary>
+    public int HCost { get; set; }
+    /// <summary>
+    /// The total cost of moving to this cell and then to the goal.
+    /// </summary>
+    public int FCost => GCost + HCost;
+    
+    /// <summary>
+    /// The parent cell of this cell.
+    /// </summary>
+    public Cell Parent { get; set; }
+    
+    /// <summary>
+    /// The direction that the cell is moving in.
+    /// </summary>
+    public char MoveDirection { get; set; }
+    
+    /// <summary>
     /// Initializes a new instance of the <see cref="Cell"/> class with the specified obstacle and coordinates.
     /// </summary>
     /// <param name="coord">The coordinates of this square as an ordered pair.</param>
