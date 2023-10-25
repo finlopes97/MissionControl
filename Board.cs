@@ -21,14 +21,9 @@ public class Board
     private int Height { get; }
 
     /// <summary>
-    /// Gets the top-left cell's coordinates of the grid represented as an <see cref="OrderedPair"/>.
+    /// Gets the first cell in the grid, which is assigned as the top-left cell.
     /// </summary>
-    private OrderedPair TopLeftCell { get; }
-
-    /// <summary>
-    /// Gets the bottom-right cell's coordinates of the grid represented as an <see cref="OrderedPair"/>.
-    /// </summary>
-    private OrderedPair BottomRightCell { get; }
+    private OrderedPair FirstCell { get; }
 
     /// <summary>
     /// Gets a list of objects that inherit from the interface <see cref="IObstacle"/>.
@@ -38,17 +33,16 @@ public class Board
     /// <summary>
     /// Initializes a new instance of a <see cref="Board"/> class with the specified top-left and bottom-right coordinates.
     /// </summary>
-    /// <param name="topLeftCell">The top-left coordinates of the grid represented as an <see cref="OrderedPair"/>.</param>
+    /// <param name="firstCell">The top-left coordinates of the grid represented as an <see cref="OrderedPair"/>.</param>
     /// <param name="bottomRightCell">The bottom-right coordinates of the grid represented as an <see cref="OrderedPair"/>.</param>
     /// <param name="obstaclesList">List of obstacles that inherit from the interface <see cref="IObstacle"/>.</param>
-    public Board(OrderedPair topLeftCell, OrderedPair bottomRightCell, List<IObstacle>? obstaclesList)
+    public Board(OrderedPair firstCell, OrderedPair bottomRightCell, List<IObstacle>? obstaclesList)
     {
-        if (bottomRightCell.X >= topLeftCell.X && bottomRightCell.Y >= topLeftCell.Y)
+        if (bottomRightCell.X >= firstCell.X && bottomRightCell.Y >= firstCell.Y)
         { 
-            Width = Math.Abs(bottomRightCell.X - topLeftCell.X) + 1;
-            Height = Math.Abs(bottomRightCell.Y - topLeftCell.Y) + 1;
-            TopLeftCell = topLeftCell;
-            BottomRightCell = bottomRightCell;
+            Width = Math.Abs(bottomRightCell.X - firstCell.X) + 1;
+            Height = Math.Abs(bottomRightCell.Y - firstCell.Y) + 1;
+            FirstCell = firstCell;
             Obstacles = obstaclesList;
         } else
         {
@@ -66,18 +60,18 @@ public class Board
     {
         Cell[,] grid = new Cell[Width, Height];
         
-        for (var y = 0; y < Height; y++)
+        for (int y = 0; y < Height; y++)
         {
-            for (var x = 0; x < Width; x++)
+            for (int x = 0; x < Width; x++)
             {
-                var realX = x + TopLeftCell.X;
-                var realY = y + TopLeftCell.Y;
+                int realX = x + FirstCell.X;
+                int realY = y + FirstCell.Y;
                 
                 OrderedPair cellPosition = new OrderedPair(realX, realY);
                 grid[x, y] = new Cell(cellPosition);
                 
                 if (Obstacles == null) continue;
-                foreach (var obstacle in Obstacles)
+                foreach (IObstacle obstacle in Obstacles)
                 {
                     if (obstacle is Camera camera && camera.InCone(camera.OriginPosition(), cellPosition))
                     {
@@ -101,11 +95,11 @@ public class Board
     /// <returns>A string representation of the grid.</returns>
     public override string? ToString()
     {
-        var gridString = "";
+        string? gridString = null;
         
-        for (var y = 0; y < Height; y++)
+        for (int y = 0; y < Height; y++)
         {
-            for (var x = 0; x < Width; x++)
+            for (int x = 0; x < Width; x++)
             {
                 gridString += Grid[x, y].CellCharCode;
             }

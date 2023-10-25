@@ -22,7 +22,7 @@ public class Camera : IObstacle
     /// <summary>
     /// Gets or sets the direction of the camera. Represented as an ordered pair (e.g. N=(0,1)).
     /// </summary>
-    public OrderedPair Direction { get; private set; }
+    private OrderedPair Direction { get; }
 
 
     /// <summary>
@@ -78,14 +78,14 @@ public class Camera : IObstacle
     /// <returns>Returns true if the cell is within the camera's cone of vision, false if the cell is outside of it.</returns>
     public bool InCone(OrderedPair cameraPosition, OrderedPair cellPosition)
     {
-        var vectorToCell = new OrderedPair(
+        OrderedPair vectorToCell = new OrderedPair(
             cellPosition.X - cameraPosition.X, 
             cellPosition.Y - cameraPosition.Y);
 
-        var angleToCell = Math.Atan2(vectorToCell.Y, vectorToCell.X);
-        var angleToDirection = Math.Atan2(Direction.Y, Direction.X);
+        double angleToCell = Math.Atan2(vectorToCell.Y, vectorToCell.X);
+        double angleToDirection = Math.Atan2(Direction.Y, Direction.X);
         
-        var angleDifference = angleToCell - angleToDirection;
+        double angleDifference = angleToCell - angleToDirection;
 
         while (angleDifference > Math.PI) angleDifference -= 2 * Math.PI;
         while (angleDifference <= -Math.PI) angleDifference += 2 * Math.PI;

@@ -71,7 +71,7 @@ public class Sensor : IObstacle
     /// <returns>True if the cell is within range; otherwise, false.</returns>
     private static bool CellInRange(OrderedPair sensorPosition, OrderedPair cellPosition)
     {
-        var distanceBetweenCells = Math.Sqrt(
+        double distanceBetweenCells = Math.Sqrt(
             Math.Pow(cellPosition.X - sensorPosition.X, 2) +
             Math.Pow(cellPosition.Y - sensorPosition.Y, 2));
         
@@ -99,11 +99,11 @@ public class Sensor : IObstacle
         Type = "Sensor";
         SensorRange = sensorRange;
         
-        for (var x = sensorPosition.X - (int)SensorRange; x <= sensorPosition.X + (int)SensorRange; x++)
+        for (int x = sensorPosition.X - (int)SensorRange; x <= sensorPosition.X + (int)SensorRange; x++)
         {
-            for (var y = sensorPosition.Y - (int)SensorRange; y <= sensorPosition.Y + (int)SensorRange; y++)
+            for (int y = sensorPosition.Y - (int)SensorRange; y <= sensorPosition.Y + (int)SensorRange; y++)
             {
-                var cellPosition = new OrderedPair(x,y);
+                OrderedPair cellPosition = new OrderedPair(x,y);
                 if (CellInRange(sensorPosition, cellPosition))
                 {
                     Positions.Add(cellPosition);

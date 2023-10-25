@@ -3,12 +3,9 @@ using System.Text;
 namespace MissionControl;
 
 /// <summary>
-/// Though I walk through the valley of the shadow of death,
-/// I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.
-/// Thou preparest a table before me in the presence of mine enemies:
-/// thou anointest my head with oil; my cup runneth over.
+/// The helper class contains methods that are used by the program to get user input and perform operations.
 /// </summary>
-public static class God
+public static class Helper
 {
     private static readonly List<IObstacle> Obstacles = new List<IObstacle>();
     
@@ -18,11 +15,11 @@ public static class God
     /// <returns>The user-selected option character.</returns>
     public static char GetOption()
     {
-        var input = Console.ReadLine();
+        string? input = Console.ReadLine();
         if (input == null || input.Length != 1)
             throw new ArgumentException("Invalid input.\n" +
                                         "Enter code:" );
-        var lowerInput = input.ToLower();
+        string lowerInput = input.ToLower();
         return lowerInput[0];
     }
         
@@ -31,12 +28,12 @@ public static class God
     /// </summary>
     public static void ShowSafeDirections()
     {
-        var safeDirections = new HashSet<char> {'N', 'S', 'E', 'W'};
+        HashSet<char> safeDirections = new HashSet<char> {'N', 'S', 'E', 'W'};
         
         Console.WriteLine( "Enter your current location (X,Y):" );
-        var position = GetPosition( Console.ReadLine() );
+        OrderedPair position = GetPosition( Console.ReadLine() );
 
-        foreach (var obstacle in Obstacles)
+        foreach (IObstacle obstacle in Obstacles)
         {
             if (obstacle.Positions == null) continue;
 
@@ -107,7 +104,7 @@ public static class God
                 return;
             }
 
-            foreach (var neighbour in GetNeighbours(currentCell))
+            foreach (Cell neighbour in GetNeighbours(currentCell))
             {
                 if (closedSet.Contains(neighbour) || IsObstacle(neighbour))
                 {
@@ -152,7 +149,7 @@ public static class God
     private static List<Cell> ReconstructPath(Cell endCell)
     {
         List<Cell> path = new List<Cell>();
-        Cell current = endCell;
+        Cell? current = endCell;
 
         while (current != null)
         {
@@ -187,7 +184,7 @@ public static class God
     
     private static bool IsObstacle(Cell cell)
     {
-        foreach (var obstacle in Obstacles)
+        foreach (IObstacle obstacle in Obstacles)
         {
             if (obstacle.IntersectsWithCell(cell.CellPosition))
                 return true;
@@ -207,7 +204,7 @@ public static class God
     public static void AddGuard()
     {
         Console.WriteLine( "Enter the guard's location (X,Y):" );
-        var guardPosition = GetPosition( Console.ReadLine() );
+        OrderedPair guardPosition = GetPosition( Console.ReadLine() );
         Obstacles.Add(new Guard(guardPosition));
     }
 
@@ -217,9 +214,9 @@ public static class God
     public static void AddFence()
     {
         Console.WriteLine( "Enter the location where the fence starts (X,Y):" );
-        var fenceStartingPosition = GetPosition( Console.ReadLine() );
+        OrderedPair fenceStartingPosition = GetPosition( Console.ReadLine() );
         Console.WriteLine( "Enter the location where the fence ends (X,Y):" );
-        var fenceEndingPosition = GetPosition( Console.ReadLine() );
+        OrderedPair fenceEndingPosition = GetPosition( Console.ReadLine() );
         Obstacles.Add(new Fence(fenceStartingPosition, fenceEndingPosition));
     }
 
@@ -229,30 +226,30 @@ public static class God
     public static void AddSensor()
     {
         Console.WriteLine( "Enter the sensor's location (X,Y):" );
-        var sensorPosition = GetPosition( Console.ReadLine() ); 
+        OrderedPair sensorPosition = GetPosition( Console.ReadLine() ); 
         Console.WriteLine( "Enter the sensor's range (in klicks):" );
-        var sensorRange = GetRange(Console.ReadLine());
-        var sensor = new Sensor(sensorPosition, sensorRange);
+        double sensorRange = GetRange(Console.ReadLine());
+        IObstacle sensor = new Sensor(sensorPosition, sensorRange);
         Obstacles.Add(sensor);
     }
 
     public static void AddCamera()
     {
         Console.WriteLine( "Enter the camera's location (X,Y):" );
-        var cameraPosition = GetPosition( Console.ReadLine() );
+        OrderedPair cameraPosition = GetPosition( Console.ReadLine() );
         Console.WriteLine( "Enter the direction the camera is facing (n, s, e or w):" );
-        var cameraDirection = GetDirection( Console.ReadLine() );
+        OrderedPair cameraDirection = GetDirection( Console.ReadLine() );
         Obstacles.Add(new Camera(cameraPosition, cameraDirection));
     }
 
     public static void AddSpotlight()
     {
         Console.WriteLine( "Enter the spotlight's location (X,Y):" );
-        var spotlightPosition = GetPosition(Console.ReadLine());
+        OrderedPair spotlightPosition = GetPosition(Console.ReadLine());
         Console.WriteLine( "Enter the direction the spotlight is facing in (n, s, e or w):" );
-        var spotlightDirection = GetDirection( Console.ReadLine() );
+        OrderedPair spotlightDirection = GetDirection( Console.ReadLine() );
         Console.WriteLine( "Enter the spotlight's range (in klicks):" );
-        var spotlightRange = GetRange( Console.ReadLine() );
+        double spotlightRange = GetRange( Console.ReadLine() );
         Obstacles.Add(new Spotlight(spotlightPosition, spotlightDirection, spotlightRange));
     }
 
@@ -262,10 +259,10 @@ public static class God
     public static void CreateBoard()
     {
         Console.WriteLine( "Enter the location of the top-left cell of the map (X,Y):" );
-        var mapTopLeft = GetPosition( Console.ReadLine() );
+        OrderedPair mapTopLeft = GetPosition( Console.ReadLine() );
         Console.WriteLine( "Enter the location of the bottom-right cell of the map (X,Y):" );
-        var mapBottomRight = GetPosition( Console.ReadLine() );
-        var board = new Board(mapTopLeft, mapBottomRight, Obstacles);
+        OrderedPair mapBottomRight = GetPosition( Console.ReadLine() );
+        Board board = new Board(mapTopLeft, mapBottomRight, Obstacles);
         Console.WriteLine( board.ToString() );
     }
 
@@ -306,7 +303,7 @@ public static class God
         if (doubleString == null)
             throw new ArgumentException( "Invalid input." );
 
-        if (double.TryParse(doubleString, out var result))
+        if (double.TryParse(doubleString, out double result))
             if (result <= 0)
                 throw new ArgumentException( "Invalid input." );
             else

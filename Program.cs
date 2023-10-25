@@ -24,7 +24,7 @@ public static class Program
             char option;
             try
             {
-                option = God.GetOption();
+                option = Helper.GetOption();
             } catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
@@ -53,31 +53,31 @@ public static class Program
         switch (option)
         {
             case 'g':
-                God.AddGuard();
+                Helper.AddGuard();
                 break;
             case 'f':
-                God.AddFence();
+                Helper.AddFence();
                 break;
             case 's':
-                God.AddSensor();
+                Helper.AddSensor();
                 break;
             case 'c':
-                God.AddCamera();
+                Helper.AddCamera();
                 break;
             case 'l':
-                God.AddSpotlight();
+                Helper.AddSpotlight();
                 break;
             case 'd':
-                God.ShowSafeDirections();
+                Helper.ShowSafeDirections();
                 break;
             case 'm':
-                God.CreateBoard();
+                Helper.CreateBoard();
                 break;
             case 'p':
-                God.FindSafePath();
+                Helper.FindSafePath();
                 break;
             case 'x':
-                God.ExitProgram();
+                Helper.ExitProgram();
                 break;
             default:
                 throw new ArgumentException("Invalid option.\n" +
@@ -91,8 +91,8 @@ public static class Program
     private static void PrintMenu()
     {
         Console.WriteLine( "Select one of the following options" );
-        var obstacleTypes = GetObstacleTypes();
-        foreach (var type in obstacleTypes)
+        List<Type> obstacleTypes = GetObstacleTypes();
+        foreach (Type type in obstacleTypes)
         {
             IObstacle? instance = (IObstacle?)Activator.CreateInstance(type);
             if (instance != null)
@@ -115,16 +115,19 @@ public static class Program
     private static List<Type> GetObstacleTypes()
     {
         // Use reflection to get all classes that implement IObstacle.
-        var obstacleTypes = Assembly.GetExecutingAssembly()
+        List<Type> obstacleTypes = Assembly.GetExecutingAssembly()
             .GetTypes()
             .Where(type => typeof(IObstacle).IsAssignableFrom(type) && type is { IsInterface: false, IsAbstract: false })
             .ToList();
         
         obstacleTypes.Sort((type1, type2) =>
         {
-            var obstacle1 = (IObstacle?)Activator.CreateInstance(type1);
-            var obstacle2 = (IObstacle?)Activator.CreateInstance(type2);
-            return obstacle1.Priority.CompareTo(obstacle2.Priority);
+            IObstacle? obstacle1 = (IObstacle?)Activator.CreateInstance(type1);
+            IObstacle? obstacle2 = (IObstacle?)Activator.CreateInstance(type2);
+            if (obstacle1 != null && obstacle2 != null)
+                return obstacle1.Priority.CompareTo(obstacle2.Priority);
+            else
+                return 0;
         });
 
         return obstacleTypes;

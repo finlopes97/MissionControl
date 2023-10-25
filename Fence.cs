@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace MissionControl;
 
 /// <summary>
@@ -56,20 +54,20 @@ public class Fence : IObstacle
     private List<OrderedPair> Points()
     {
         int numPoints;
-        var points = new List<OrderedPair>();
+        List<OrderedPair> points = new List<OrderedPair>();
         
-        var startX = FenceStartingPosition.X;
-        var startY = FenceStartingPosition.Y;
-        var endX = FenceEndingPosition.X;
-        var endY = FenceEndingPosition.Y;
+        int startX = FenceStartingPosition.X;
+        int startY = FenceStartingPosition.Y;
+        int endX = FenceEndingPosition.X;
+        int endY = FenceEndingPosition.Y;
         
         if (startX == endX) // Vertical fence
         {
             numPoints = Math.Abs(endY - startY) + 1;
 
-            for (var i = 0; i < numPoints; i++)
+            for (int i = 0; i < numPoints; i++)
             {
-                var currentY = Math.Min(startY, endY) + i;
+                int currentY = Math.Min(startY, endY) + i;
                 points.Add(new OrderedPair(startX, currentY));
             }
         }
@@ -77,9 +75,9 @@ public class Fence : IObstacle
         {
             numPoints = Math.Abs(endX - startX) + 1;
 
-            for (var i = 0; i < numPoints; i++)
+            for (int i = 0; i < numPoints; i++)
             {
-                var currentX = Math.Min(startX, endX) + i;
+                int currentX = Math.Min(startX, endX) + i;
                 points.Add(new OrderedPair(currentX, startY));
             }
         }

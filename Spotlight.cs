@@ -51,15 +51,10 @@ public class Spotlight : IObstacle
     
     public bool IntersectsWithCell(OrderedPair cellToCheck)
     {
-        if (Positions == null) return false;
-
-        foreach (var position in Positions)
-        {
-            if (Positions.Contains(cellToCheck))
-                return true;
-        }
-
-        return false;
+        if (Positions != null && Positions.Contains(cellToCheck))
+            return true;
+        else
+            return false;
     }
 
     /// <summary>
@@ -80,22 +75,22 @@ public class Spotlight : IObstacle
     /// </summary>
     private void GenerateSpotlightArea()
     {
-        var spotlightRangeRounded = Convert.ToInt32(SpotlightRange);
+        int spotlightRangeRounded = Convert.ToInt32(SpotlightRange);
 
         if (Positions != null)
         {
-            var endPoint = new OrderedPair(
+            OrderedPair endPoint = new OrderedPair(
                 Positions[0].X + SpotlightDirection.X * spotlightRangeRounded,
                 Positions[0].Y + SpotlightDirection.Y * spotlightRangeRounded);
             
             Console.WriteLine( $"The direction the spotlight is facing in is: {SpotlightDirection.ToString()}." );
             Console.WriteLine( $"Origin of the spotlight is: {Positions[0].ToString()}, and the end point of the spotlight's range is {endPoint.ToString()}." );
 
-            for (var x = endPoint.X - SpotlightDiameter; x <= endPoint.X + SpotlightDiameter; x++)
+            for (int x = endPoint.X - SpotlightDiameter; x <= endPoint.X + SpotlightDiameter; x++)
             {
-                for (var y = endPoint.Y - SpotlightDiameter; y <= endPoint.Y + SpotlightDiameter; y++)
+                for (int y = endPoint.Y - SpotlightDiameter; y <= endPoint.Y + SpotlightDiameter; y++)
                 {
-                    var cellPosition = new OrderedPair(x, y);
+                    OrderedPair cellPosition = new OrderedPair(x, y);
                     if (CellInRange(endPoint, cellPosition))
                     {
                         Positions.Add(cellPosition);
@@ -113,7 +108,7 @@ public class Spotlight : IObstacle
     /// <returns></returns>
     private static bool CellInRange(OrderedPair endPoint, OrderedPair cellPosition)
     {
-        var distanceBetweenCells = Math.Sqrt(
+        double distanceBetweenCells = Math.Sqrt(
             Math.Pow(cellPosition.X - endPoint.X, 2) +
             Math.Pow(cellPosition.Y - endPoint.Y, 2));
 

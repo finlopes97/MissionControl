@@ -46,7 +46,7 @@ public class Cell
     /// <summary>
     /// The parent cell of this cell.
     /// </summary>
-    public Cell Parent { get; set; }
+    public Cell? Parent { get; set; }
     
     public override bool Equals(object? obj)
     {
@@ -71,6 +71,7 @@ public class Cell
     {
         CellPosition = coord;
         CurrentObstacle = obstacle;
+        Parent = null;
         CellCharCode = '.';
     }
 }
