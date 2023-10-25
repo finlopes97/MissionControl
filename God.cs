@@ -96,7 +96,7 @@ public static class God
             {
                 List<Cell> path = ReconstructPath(currentCell);
                 string directions = GetDirections(path);
-                Console.WriteLine($"The following path will take you to the objective: {directions}");
+                Console.WriteLine($"The following path will take you to the objective:\n{directions}");
                 return;
             }
 
