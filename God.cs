@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace MissionControl;
 
 /// <summary>
@@ -70,19 +72,115 @@ public static class God
     public static void FindSafePath()
     {
         Console.WriteLine( "Enter your current location (X,Y):" );
-        var startCell = new Cell(GetPosition(Console.ReadLine()));
+        Cell startCell = new Cell(GetPosition(Console.ReadLine()));
         Console.WriteLine( "Enter the location of the mission objective (X,Y):" );
-        var endCell = new Cell(GetPosition(Console.ReadLine()));
-
-        Queue<Cell> queue = new Queue<Cell>();
-        queue.Enqueue(startCell);
-
-        Dictionary<Cell, Cell> parentMap = new Dictionary<Cell, Cell>();
-        parentMap[startCell] = null;
-        bool objectiveFound = false;
+        Cell endCell = new Cell(GetPosition(Console.ReadLine()));
+        
+        AStar(startCell, endCell);
     }
 
+    private static void AStar(Cell startCell, Cell endCell)
+    {
+        var openSet = new HashSet<Cell>();
+        var closedSet = new HashSet<Cell>();
+        openSet.Add(startCell);
+        
+        while (openSet.Count > 0)
+        {
+            Cell currentCell = openSet.OrderBy(cell => cell.FCost).First();
 
+            openSet.Remove(currentCell);
+            closedSet.Add(currentCell);
+
+            if (currentCell.CellPosition.IsEqual(endCell.CellPosition))
+            {
+                List<Cell> path = ReconstructPath(currentCell);
+                string directions = GetDirections(path);
+                Console.WriteLine($"The following path will take you to the objective: {directions}");
+                return;
+            }
+
+            foreach (var neighbour in GetNeighbours(currentCell))
+            {
+                if (closedSet.Contains(neighbour) || IsObstacle(neighbour))
+                    continue;
+                
+                int tentativeGCost = currentCell.GCost + 1;
+                
+                if (tentativeGCost < neighbour.GCost || !openSet.Contains(neighbour))
+                {
+                    neighbour.GCost = tentativeGCost;
+                    neighbour.HCost = GetDistance(neighbour, endCell);
+                    neighbour.Parent = currentCell;
+
+                    if (!openSet.Contains(neighbour))
+                        openSet.Add(neighbour);
+                }
+            }
+        }
+        Console.WriteLine( "There is no safe path to the objective." );
+    }
+
+    private static List<Cell> GetNeighbours(Cell cell)
+    {
+        List<Cell> neighbours = new List<Cell>();
+
+        int x = cell.CellPosition.X;
+        int y = cell.CellPosition.Y;
+        
+        neighbours.Add(new Cell(new OrderedPair(x, y - 1)));
+        neighbours.Add(new Cell(new OrderedPair(x, y + 1)));
+        neighbours.Add(new Cell(new OrderedPair(x + 1, y)));
+        neighbours.Add(new Cell(new OrderedPair(x - 1, y)));
+        
+        return neighbours;
+    }
+
+    private static List<Cell> ReconstructPath(Cell endCell)
+    {
+        List<Cell> path = new List<Cell>();
+        Cell current = endCell;
+
+        while (current != null)
+        {
+            path.Add(current);
+            current = current.Parent;
+        }
+
+        path.Reverse();
+        return path;
+    }
+
+    private static string GetDirections(List<Cell> path)
+    {
+        StringBuilder directions = new StringBuilder();
+        for (int i = 0; i < path.Count - 1; i++)
+        {
+            Cell current = path[i];
+            Cell next = path[i + 1];
+
+            if (next.CellPosition.Y < current.CellPosition.Y)
+                directions.Append("N");
+            else if (next.CellPosition.X > current.CellPosition.X)
+                directions.Append("E");
+            else if (next.CellPosition.Y > current.CellPosition.Y)
+                directions.Append("S");
+            else if (next.CellPosition.X < current.CellPosition.X)
+                directions.Append("W");
+        }
+
+        return directions.ToString();
+    }
+    
+    private static bool IsObstacle(Cell cell)
+    {
+        return cell.CurrentObstacle != null;
+    }
+    
+    private static int GetDistance(Cell a, Cell b)
+    {
+        return Math.Abs(a.CellPosition.X - b.CellPosition.X) + Math.Abs(a.CellPosition.Y - b.CellPosition.Y);
+    }
     
     /// <summary>
     /// Adds a guard to the list of obstacles based on user input.
