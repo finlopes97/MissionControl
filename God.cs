@@ -70,16 +70,16 @@ public static class God
     public static void FindSafePath()
     {
         Console.WriteLine( "Enter your current location (X,Y):" );
-        var playerCell = new Cell(GetPosition(Console.ReadLine()));
+        var startCell = new Cell(GetPosition(Console.ReadLine()));
         Console.WriteLine( "Enter the location of the mission objective (X,Y):" );
-        var objectiveCell = new Cell(GetPosition(Console.ReadLine()));
+        var endCell = new Cell(GetPosition(Console.ReadLine()));
 
-        var path = Pathfinding.GenerateSafeDirections();
-        Console.WriteLine( "The following path will take you to the objective: " );
-        foreach (var cell in path)
-        {
-            Console.Write( cell.MoveDirection );
-        }
+        Queue<Cell> queue = new Queue<Cell>();
+        queue.Enqueue(startCell);
+
+        Dictionary<Cell, Cell> parentMap = new Dictionary<Cell, Cell>();
+        parentMap[startCell] = null;
+        bool objectiveFound = false;
     }
 
 
