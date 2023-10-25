@@ -48,10 +48,19 @@ public class Cell
     /// </summary>
     public Cell Parent { get; set; }
     
-    /// <summary>
-    /// The direction that the cell is moving in.
-    /// </summary>
-    public char MoveDirection { get; set; }
+    public override bool Equals(object? obj)
+    {
+        if (obj is Cell otherCell)
+        {
+            return this.CellPosition.Equals(otherCell.CellPosition);
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return this.CellPosition.GetHashCode();
+    }
     
     /// <summary>
     /// Initializes a new instance of the <see cref="Cell"/> class with the specified obstacle and coordinates.

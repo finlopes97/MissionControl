@@ -81,6 +81,8 @@ public static class God
 
     private static void AStar(Cell startCell, Cell endCell)
     {
+        Console.WriteLine($"Starting A* from {startCell.CellPosition} to {endCell.CellPosition}");
+
         PriorityQueue<Cell, int> openQueue = new PriorityQueue<Cell, int>();
         HashSet<Cell> openSet  = new HashSet<Cell>();
         HashSet<Cell> closedSet = new HashSet<Cell>();
@@ -93,8 +95,11 @@ public static class God
             Cell currentCell = openQueue.Dequeue();
             openSet.Remove(currentCell);
             closedSet.Add(currentCell);
+            
+            Console.WriteLine($"Processing cell {currentCell.CellPosition} with FCost: {currentCell.FCost}, GCost: {currentCell.GCost}, HCost: {currentCell.HCost}");
 
-            if (currentCell.CellPosition.IsEqual(endCell.CellPosition))
+
+            if (currentCell.Equals(endCell))
             {
                 List<Cell> path = ReconstructPath(currentCell);
                 string directions = GetDirections(path);
@@ -105,7 +110,10 @@ public static class God
             foreach (var neighbour in GetNeighbours(currentCell))
             {
                 if (closedSet.Contains(neighbour) || IsObstacle(neighbour))
+                {
+                    closedSet.Add(neighbour);
                     continue;
+                }
                 
                 int tentativeGCost = currentCell.GCost + 1;
                 
