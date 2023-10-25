@@ -81,14 +81,16 @@ public static class God
 
     private static void AStar(Cell startCell, Cell endCell)
     {
-        var openSet = new HashSet<Cell>();
-        var closedSet = new HashSet<Cell>();
+        PriorityQueue<Cell, int> openQueue = new PriorityQueue<Cell, int>();
+        HashSet<Cell> openSet  = new HashSet<Cell>();
+        HashSet<Cell> closedSet = new HashSet<Cell>();
+        
+        openQueue.Enqueue(startCell, startCell.FCost);
         openSet.Add(startCell);
         
-        while (openSet.Count > 0)
+        while (openQueue.Count > 0)
         {
-            Cell currentCell = openSet.OrderBy(cell => cell.FCost).First();
-
+            Cell currentCell = openQueue.Dequeue();
             openSet.Remove(currentCell);
             closedSet.Add(currentCell);
 
@@ -114,7 +116,10 @@ public static class God
                     neighbour.Parent = currentCell;
 
                     if (!openSet.Contains(neighbour))
+                    {
+                        openQueue.Enqueue(neighbour, neighbour.FCost);
                         openSet.Add(neighbour);
+                    }
                 }
             }
         }
@@ -174,7 +179,13 @@ public static class God
     
     private static bool IsObstacle(Cell cell)
     {
-        return cell.CurrentObstacle != null;
+        foreach (var obstacle in Obstacles)
+        {
+            if (obstacle.IntersectsWithCell(cell.CellPosition))
+                return true;
+        }
+
+        return false;
     }
     
     private static int GetDistance(Cell a, Cell b)
