@@ -12,11 +12,6 @@ public class Camera : IObstacle
     public List<Coordinate>? Positions { get; set; }
     
     /// <summary>
-    /// The camera is not traversable.
-    /// </summary>
-    public bool IsTraversable => false;
-    
-    /// <summary>
     /// Cameras have no movement cost as they are not traversable.
     /// </summary>
     public int MovementCost => 0;

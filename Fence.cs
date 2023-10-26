@@ -11,11 +11,6 @@ public class Fence : IObstacle
     public List<Coordinate>? Positions { get; set; }
     
     /// <summary>
-    /// The fence is not traversable.
-    /// </summary>
-    public bool IsTraversable => false;
-    
-    /// <summary>
     /// Fences have no movement cost as they are not traversable.
     /// </summary>
     public int MovementCost => 0;

@@ -8,12 +8,7 @@ public interface IObstacle
     /// <summary>
     /// Gets the position of the obstacle as a list of ordered pairs.
     /// </summary>
-    public List<Coordinate>? Positions { get; set; }
-    
-    /// <summary>
-    /// Returns true if the obstacle is traversable or not.
-    /// </summary>
-    public bool IsTraversable { get; }
+    public List<Coordinate>? Positions { get; }
     
     /// <summary>
     /// The cost of traversing the obstacle.

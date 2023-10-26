@@ -9,11 +9,6 @@ public class Guard : IObstacle
     /// Gets the position of the guard as a list of ordered pairs.
     /// </summary>
     public List<Coordinate>? Positions { get; set; }
-
-    /// <summary>
-    /// The guard is not traversable.
-    /// </summary>
-    public bool IsTraversable => false;
     
     /// <summary>
     /// Guards have no movement cost as they are not traversable.

@@ -12,11 +12,6 @@ public class Sensor : IObstacle
     public List<Coordinate>? Positions { get; set; }
     
     /// <summary>
-    /// The sensor is not traversable.
-    /// </summary>
-    public bool IsTraversable => false;
-    
-    /// <summary>
     /// Sensors have no movement cost as they are not traversable.
     /// </summary>
     public int MovementCost => 0;

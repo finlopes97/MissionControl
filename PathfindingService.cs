@@ -134,8 +134,6 @@ public static class PathfindingService
         return directions.ToString();
     }
     
-    // TODO - Movement cost = 0 for objects that are not traversable, could allow me to remove the IsTraversable check
-    
     /// <summary>
     /// Checks if the cell is traversable
     /// </summary>
@@ -145,13 +143,12 @@ public static class PathfindingService
     {
         foreach (IObstacle obstacle in ObstacleService.Obstacles)
         {
-            if (obstacle.IntersectsWithCell(cell.CellPosition) && !obstacle.IsTraversable)
+            if (obstacle.IntersectsWithCell(cell.CellPosition) && obstacle.MovementCost == 0)
                 return false;
         }
 
         return true;
     }
-    
     
     /// <summary>
     /// Gets the movement cost of the cell.

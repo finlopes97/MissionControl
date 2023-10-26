@@ -1,7 +1,9 @@
 namespace MissionControl;
 
 /// <summary>
-/// Quicksand is an obstacle that has a randomised splatter pattern that extends from an origin point, it is traversable but has a movement cost.
+/// Quicksand is an obstacle that has a randomised splatter pattern that extends from an origin point with a greater density towards the centre.
+/// It is traversable but has a movement cost. The agent should prefer an unimpeded path over a path with quicksand but if it is faster
+/// it will still take the path with quicksand.
 /// </summary>
 public class Quicksand : IObstacle
 {
@@ -9,11 +11,6 @@ public class Quicksand : IObstacle
     /// Gets the positions that the mud occupies as a list of ordered pairs.
     /// </summary>
     public List<Coordinate>? Positions { get; set; }
-    
-    /// <summary>
-    /// The mud is traversable.
-    /// </summary>
-    public bool IsTraversable => true;
 
     /// <summary>
     /// Quicksand has a movement cost as it is traversable.
@@ -36,9 +33,9 @@ public class Quicksand : IObstacle
     public int Priority => 5;
 
     /// <summary>
-    /// Adds a guard to the grid.
+    /// Adds quicksand to the board.
     /// </summary>
-    /// <param name="cell">The cell to add the guard to.</param>
+    /// <param name="cell">The origin point of the quicksand.</param>
     public void AddObstacle(ref Cell cell)
     {
         if (Positions != null)
@@ -47,11 +44,22 @@ public class Quicksand : IObstacle
         }
     }
     
+    /// <summary>
+    /// Checks if the quicksand obstacle intersects with a specified cell.
+    /// </summary>
+    /// <param name="cellToCheck">The cell to check for intersection.</param>
+    /// <returns>True if the quicksand intersects with the cell, otherwise false.</returns>
     public bool IntersectsWithCell(Coordinate cellToCheck)
     {
         return Positions != null && Positions.Contains(cellToCheck);
     }
-
+    
+    /// <summary>
+    /// Fills an area with quicksand based on a splatter pattern.
+    /// </summary>
+    /// <param name="origin">The center of the quicksand area.</param>
+    /// <param name="areaRange">The range around the origin to consider for quicksand placement.</param>
+    /// <returns>A list of coordinates representing the quicksand-filled area.</returns>
     private List<Coordinate> FillArea(Coordinate origin, double areaRange)
     {
         List<Coordinate> filledPositions = new List<Coordinate>();
@@ -85,9 +93,9 @@ public class Quicksand : IObstacle
     }
     
     /// <summary>
-    /// Initializes a new instance of the guard class with the specified position.
+    /// Initializes a new instance of the Quicksand class with the specified position, range, and depth.
     /// </summary>
-    /// <param name="quicksandOrigin">The position of the guard as an ordered pair.</param>
+    /// <param name="quicksandOrigin">The origin position of the quicksand.</param>
     /// <param name="quicksandRange">The range that the quicksand can spawn in.</param>
     /// <param name="quicksandDepth">Determines the movement cost of the quicksand.</param>
     public Quicksand(Coordinate quicksandOrigin, double quicksandRange, double quicksandDepth)
