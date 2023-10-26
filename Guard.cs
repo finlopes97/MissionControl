@@ -8,8 +8,18 @@ public class Guard : IObstacle
     /// <summary>
     /// Gets the position of the guard as a list of ordered pairs.
     /// </summary>
-    public List<OrderedPair>? Positions { get; set; }
+    public List<Coordinate>? Positions { get; set; }
+
+    /// <summary>
+    /// The guard is not traversable.
+    /// </summary>
+    public bool IsTraversable => false;
     
+    /// <summary>
+    /// Guards have no movement cost as they are not traversable.
+    /// </summary>
+    public int MovementCost => 0;
+
     /// <summary>
     /// Gets the character code representing the guard.
     /// </summary>
@@ -42,7 +52,7 @@ public class Guard : IObstacle
     /// </summary>
     /// <param name="cellToCheck">The cell to check for intersection.</param>
     /// <returns>True if the guard intersects with the cell, otherwise false.</returns>
-    public bool IntersectsWithCell(OrderedPair cellToCheck)
+    public bool IntersectsWithCell(Coordinate cellToCheck)
     {
         if (Positions == null) return false;
         
@@ -65,9 +75,9 @@ public class Guard : IObstacle
     /// Initializes a new instance of the guard class with the specified position.
     /// </summary>
     /// <param name="guardPosition">The position of the guard as an ordered pair.</param>
-    public Guard(OrderedPair guardPosition)
+    public Guard(Coordinate guardPosition)
     {
-        Positions = new List<OrderedPair>() { guardPosition };
+        Positions = new List<Coordinate>() { guardPosition };
         CharCode = 'g';
         Type = "Guard";
     }

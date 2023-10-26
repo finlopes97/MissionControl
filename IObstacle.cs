@@ -8,7 +8,17 @@ public interface IObstacle
     /// <summary>
     /// Gets the position of the obstacle as a list of ordered pairs.
     /// </summary>
-    public List<OrderedPair>? Positions { get; set; }
+    public List<Coordinate>? Positions { get; set; }
+    
+    /// <summary>
+    /// Returns true if the obstacle is traversable or not.
+    /// </summary>
+    public bool IsTraversable { get; }
+    
+    /// <summary>
+    /// The cost of traversing the obstacle.
+    /// </summary>
+    public int MovementCost { get; }
     
     /// <summary>
     /// Gets the character code that represents the obstacle.
@@ -35,5 +45,5 @@ public interface IObstacle
     /// Determines whether the specified cell is within the obstacle.
     /// </summary>
     /// <param name="cellToCheck">The <see cref="Cell"/> to compare against the obstacle's position and range of detection.</param>
-    public bool IntersectsWithCell(OrderedPair cellToCheck);
+    public bool IntersectsWithCell(Coordinate cellToCheck);
 }

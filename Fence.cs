@@ -1,14 +1,24 @@
 namespace MissionControl;
 
 /// <summary>
-/// Represents a fence obstacle in the mission control system.
+/// The fence is an obstacle that stretches from one point to another, it is not traversable.
 /// </summary>
 public class Fence : IObstacle
 {
     /// <summary>
     /// Gets the position of the fence as a list of ordered pairs.
     /// </summary>
-    public List<OrderedPair>? Positions { get; set; }
+    public List<Coordinate>? Positions { get; set; }
+    
+    /// <summary>
+    /// The fence is not traversable.
+    /// </summary>
+    public bool IsTraversable => false;
+    
+    /// <summary>
+    /// Fences have no movement cost as they are not traversable.
+    /// </summary>
+    public int MovementCost => 0;
     
     /// <summary>
     /// Gets the character code representing the fence.
@@ -25,9 +35,9 @@ public class Fence : IObstacle
     /// </summary>
     public int Priority => 1;
     
-    private OrderedPair FenceStartingPosition { get; }
+    private Coordinate FenceStartingPosition { get; }
     
-    private OrderedPair FenceEndingPosition { get; }
+    private Coordinate FenceEndingPosition { get; }
 
     /// <summary>
     /// Adds a fence to the grid.
@@ -46,43 +56,53 @@ public class Fence : IObstacle
     /// </summary>
     /// <param name="cellToCheck">The cell to check for intersection.</param>
     /// <returns>True if the fence intersects with the cell, otherwise false.</returns>
-    public bool IntersectsWithCell(OrderedPair cellToCheck)
+    public bool IntersectsWithCell(Coordinate cellToCheck)
     {
         return Positions != null && Positions.Contains(cellToCheck);
     }
 
-    private List<OrderedPair> Points()
+    /// <summary>
+    /// Calculates the points that the fence occupies based on its starting and ending positions.
+    /// </summary>
+    /// <returns>A list of positions representing the points occupied by the fence.</returns>
+    /// <exception cref="ArgumentException">Thrown when the fence is neither horizontal nor vertical.</exception>
+    private List<Coordinate> Points()
     {
         int numPoints;
-        List<OrderedPair> points = new List<OrderedPair>();
+        List<Coordinate> points = new List<Coordinate>();
         
         int startX = FenceStartingPosition.X;
         int startY = FenceStartingPosition.Y;
         int endX = FenceEndingPosition.X;
         int endY = FenceEndingPosition.Y;
         
-        if (startX == endX) // Vertical fence
+        // Check if the fence is vertical (i.e. X-coordinates are the same)
+        if (startX == endX)
         {
+            // Calculate the number of points based on the difference in Y-coordinates
             numPoints = Math.Abs(endY - startY) + 1;
 
+            // Iterate and add each point of the vertical fence to the list
             for (int i = 0; i < numPoints; i++)
             {
                 int currentY = Math.Min(startY, endY) + i;
-                points.Add(new OrderedPair(startX, currentY));
+                points.Add(new Coordinate(startX, currentY));
             }
         }
-        else if (startY == endY) // Horizontal fence
+        // Check if the fence is horizontal (i.e. Y-coordinates are the same)
+        else if (startY == endY)
         {
             numPoints = Math.Abs(endX - startX) + 1;
 
             for (int i = 0; i < numPoints; i++)
             {
                 int currentX = Math.Min(startX, endX) + i;
-                points.Add(new OrderedPair(currentX, startY));
+                points.Add(new Coordinate(currentX, startY));
             }
         }
         else
         {
+            // If the fence is neither horizontal nor vertical, throw an exception
             throw new ArgumentException("Fences must be horizontal or vertical.");
         }
 
@@ -104,7 +124,7 @@ public class Fence : IObstacle
     /// <param name="fenceStartingPosition">The starting position of the fence as an ordered pair.</param>
     /// <param name="fenceEndingPosition">The ending position of the fence as an ordered pair.</param>
     /// <exception cref="ArgumentException">Thrown when the fence is not horizontal or vertical.</exception>
-    public Fence(OrderedPair fenceStartingPosition, OrderedPair fenceEndingPosition)
+    public Fence(Coordinate fenceStartingPosition, Coordinate fenceEndingPosition)
     {
         if (fenceStartingPosition.IsEqual(fenceEndingPosition) || fenceStartingPosition.IsDiagonalFrom(fenceEndingPosition))
         {

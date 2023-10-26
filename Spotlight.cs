@@ -5,7 +5,17 @@ public class Spotlight : IObstacle
     /// <summary>
     /// A list of positions that the obstacle occupies on the grid.
     /// </summary>
-    public List<OrderedPair>? Positions { get; set; }
+    public List<Coordinate>? Positions { get; set; }
+    
+    /// <summary>
+    /// The sensor is not traversable.
+    /// </summary>
+    public bool IsTraversable => false;
+    
+    /// <summary>
+    /// Spotlights have no movement cost as they are not traversable.
+    /// </summary>
+    public int MovementCost => 0;
     
     /// <summary>
     /// Gets the character code that represents the obstacle.
@@ -25,7 +35,7 @@ public class Spotlight : IObstacle
     /// <summary>
     /// The direction that the spotlight is facing in, represented as an ordered pair vector.
     /// </summary>
-    private OrderedPair SpotlightDirection { get; }
+    private Coordinate SpotlightDirection { get; }
     
     /// <summary>
     /// The offset between the spotlight's endPoint point and the end of its range.
@@ -49,25 +59,12 @@ public class Spotlight : IObstacle
         }
     }
     
-    public bool IntersectsWithCell(OrderedPair cellToCheck)
+    public bool IntersectsWithCell(Coordinate cellToCheck)
     {
         if (Positions != null && Positions.Contains(cellToCheck))
             return true;
         else
             return false;
-    }
-
-    /// <summary>
-    /// Gets the origin position of the <see cref="Spotlight"/> as an <see cref="OrderedPair"/>.
-    /// </summary>
-    /// <returns>Returns an <see cref="OrderedPair"/> representing the origin.</returns>
-    /// <exception cref="Exception">Throws an exception if object has no positions.</exception>
-    public OrderedPair OriginPosition()
-    {
-        if (Positions == null) 
-            throw new Exception( "Spotlight object has no positions." );
-        else 
-            return Positions.First();
     }
 
     /// <summary>
@@ -77,24 +74,22 @@ public class Spotlight : IObstacle
     {
         int spotlightRangeRounded = Convert.ToInt32(SpotlightRange);
 
-        if (Positions != null)
-        {
-            OrderedPair endPoint = new OrderedPair(
-                Positions[0].X + SpotlightDirection.X * spotlightRangeRounded,
-                Positions[0].Y + SpotlightDirection.Y * spotlightRangeRounded);
+        if (Positions == null) return;
+        
+        // The spotlight creates an area in a circle offset from its origin point, this finds the center position of that area.
+        Coordinate endPoint = new Coordinate(
+            Positions[0].X + SpotlightDirection.X * spotlightRangeRounded,
+            Positions[0].Y + SpotlightDirection.Y * spotlightRangeRounded);
             
-            Console.WriteLine( $"The direction the spotlight is facing in is: {SpotlightDirection.ToString()}." );
-            Console.WriteLine( $"Origin of the spotlight is: {Positions[0].ToString()}, and the end point of the spotlight's range is {endPoint.ToString()}." );
-
-            for (int x = endPoint.X - SpotlightDiameter; x <= endPoint.X + SpotlightDiameter; x++)
+        // Uses similar code to the sensor obstacle to fill in the area offset from the origin.
+        for (int x = endPoint.X - SpotlightDiameter; x <= endPoint.X + SpotlightDiameter; x++)
+        {
+            for (int y = endPoint.Y - SpotlightDiameter; y <= endPoint.Y + SpotlightDiameter; y++)
             {
-                for (int y = endPoint.Y - SpotlightDiameter; y <= endPoint.Y + SpotlightDiameter; y++)
+                Coordinate cellPosition = new Coordinate(x, y);
+                if (CellInRange(endPoint, cellPosition))
                 {
-                    OrderedPair cellPosition = new OrderedPair(x, y);
-                    if (CellInRange(endPoint, cellPosition))
-                    {
-                        Positions.Add(cellPosition);
-                    }
+                    Positions.Add(cellPosition);
                 }
             }
         }
@@ -103,11 +98,12 @@ public class Spotlight : IObstacle
     /// <summary>
     /// Checks if a cell is within the spotlight's range.
     /// </summary>
-    /// <param name="endPoint">An <see cref="OrderedPair"/> that represents the end point of the spotlight's range.</param>
-    /// <param name="cellPosition">An <see cref="OrderedPair"/> that represents the cell to compare against the endPoint</param>
+    /// <param name="endPoint">An <see cref="Coordinate"/> that represents the end point of the spotlight's range.</param>
+    /// <param name="cellPosition">An <see cref="Coordinate"/> that represents the cell to compare against the endPoint</param>
     /// <returns></returns>
-    private static bool CellInRange(OrderedPair endPoint, OrderedPair cellPosition)
+    private static bool CellInRange(Coordinate endPoint, Coordinate cellPosition)
     {
+        // Uses the Pythagorean formula to determine if the cell is within range.
         double distanceBetweenCells = Math.Sqrt(
             Math.Pow(cellPosition.X - endPoint.X, 2) +
             Math.Pow(cellPosition.Y - endPoint.Y, 2));
@@ -127,12 +123,12 @@ public class Spotlight : IObstacle
     /// <summary>
     /// Initializes a new instance of the <see cref="Spotlight"/> class with a specified position, direction and range.
     /// </summary>
-    /// <param name="spotlightPosition">An <see cref="OrderedPair"/> endPoint position of the spotlight.</param>
-    /// <param name="spotlightDirection">An <see cref="OrderedPair"/> that represents the direction that the spotlight is facing in.</param>
+    /// <param name="spotlightPosition">An <see cref="Coordinate"/> endPoint position of the spotlight.</param>
+    /// <param name="spotlightDirection">An <see cref="Coordinate"/> that represents the direction that the spotlight is facing in.</param>
     /// <param name="spotlightRange">A <see cref="System.Double"/> the offset between the spotlight's endPoint point and the end of its range.</param>
-    public Spotlight(OrderedPair spotlightPosition, OrderedPair spotlightDirection, double spotlightRange)
+    public Spotlight(Coordinate spotlightPosition, Coordinate spotlightDirection, double spotlightRange)
     {
-        Positions = new List<OrderedPair>() { spotlightPosition };
+        Positions = new List<Coordinate>() { spotlightPosition };
         CharCode = 'l';
         Type = "Spotlight";
 

@@ -1,8 +1,25 @@
 namespace MissionControl;
 
+/// <summary>
+/// Represents a camera obstacle in the mission control system.
+/// Has an origin position, direction and indefinite range in a 45 degree cone of vision.
+/// </summary>
 public class Camera : IObstacle
 {
-    public List<OrderedPair>? Positions { get; set; }
+    /// <summary>
+    /// Gets the position of the camera as a list of ordered pairs.
+    /// </summary>
+    public List<Coordinate>? Positions { get; set; }
+    
+    /// <summary>
+    /// The camera is not traversable.
+    /// </summary>
+    public bool IsTraversable => false;
+    
+    /// <summary>
+    /// Cameras have no movement cost as they are not traversable.
+    /// </summary>
+    public int MovementCost => 0;
     
     /// <summary>
     /// Gets the character code that represents the obstacle.
@@ -22,15 +39,15 @@ public class Camera : IObstacle
     /// <summary>
     /// Gets or sets the direction of the camera. Represented as an ordered pair (e.g. N=(0,1)).
     /// </summary>
-    private OrderedPair Direction { get; }
+    private Coordinate Direction { get; }
 
 
     /// <summary>
-    /// Gets the origin position of the <see cref="Camera"/> as an <see cref="OrderedPair"/>.
+    /// Gets the origin position of the camera.
     /// </summary>
-    /// <returns>Returns an <see cref="OrderedPair"/> representing the origin.</returns>
+    /// <returns>Returns an ordered pair representing the origin.</returns>
     /// <exception cref="Exception">Throws an exception if object has no positions.</exception>
-    public OrderedPair OriginPosition()
+    private Coordinate OriginPosition()
     {
         if (Positions == null) 
             throw new Exception( "Camera object has no positions." );
@@ -39,10 +56,9 @@ public class Camera : IObstacle
     }
     
     /// <summary>
-    /// Adds the camera as an obstacle to the specified cell. Looks in the direction specified by <see cref="Direction"/>.
-    /// Extends indefinitely in a cone shape.
+    /// Adds the camera as an obstacle to the specified cell.
     /// </summary>
-    /// <param name="cell">The <see cref="Cell"/> to which the camera is added.</param>
+    /// <param name="cell">The cell to which the camera is added.</param>
     public void AddObstacle(ref Cell cell)
     {
         if(Positions == null) return;
@@ -58,7 +74,7 @@ public class Camera : IObstacle
     /// </summary>
     /// <param name="cellToCheck">The cell to check for intersection.</param>
     /// <returns>True if the camera intersects with the cell, otherwise false.</returns>
-    public bool IntersectsWithCell(OrderedPair cellToCheck)
+    public bool IntersectsWithCell(Coordinate cellToCheck)
     {
         if (Positions == null) return false;
         
@@ -76,22 +92,30 @@ public class Camera : IObstacle
     /// <param name="cameraPosition">The camera's initial position.</param>
     /// <param name="cellPosition">The position of the cell to compare to.</param>
     /// <returns>Returns true if the cell is within the camera's cone of vision, false if the cell is outside of it.</returns>
-    public bool InCone(OrderedPair cameraPosition, OrderedPair cellPosition)
+    private bool InCone(Coordinate cameraPosition, Coordinate cellPosition)
     {
-        OrderedPair vectorToCell = new OrderedPair(
+        // Calculate the vector from the camera to the cell.
+        Coordinate vectorToCell = new Coordinate(
             cellPosition.X - cameraPosition.X, 
             cellPosition.Y - cameraPosition.Y);
 
+        // Calculate the angle between the X-axis and the vector to the cell.
         double angleToCell = Math.Atan2(vectorToCell.Y, vectorToCell.X);
+        // Calculate the angle between the X-axis and the camera's direction.
         double angleToDirection = Math.Atan2(Direction.Y, Direction.X);
         
+        // Calculate the difference between the two angles.
         double angleDifference = angleToCell - angleToDirection;
 
+        // Normalise the angle difference to be between -π and π.
         while (angleDifference > Math.PI) angleDifference -= 2 * Math.PI;
         while (angleDifference <= -Math.PI) angleDifference += 2 * Math.PI;
 
+        // Define the half angle of the camera's cone of vision (45 degrees in radians).
         const double halfConeAngle = Math.PI / 4;
-
+        
+        // Check if the absolute difference between the angles is less than or equal to the half-angle of the cone.
+        // If it is, the cell is within the camera's cone of vision.
         return Math.Abs(angleDifference) <= halfConeAngle;
     }
     
@@ -109,9 +133,9 @@ public class Camera : IObstacle
     /// </summary>
     /// <param name="cameraPosition">The initial position of the camera.</param>
     /// <param name="cameraDirection">The direction that the camera is facing in.</param>
-    public Camera(OrderedPair cameraPosition, OrderedPair cameraDirection)
+    public Camera(Coordinate cameraPosition, Coordinate cameraDirection)
     {
-        Positions = new List<OrderedPair>() { cameraPosition };
+        Positions = new List<Coordinate>() { cameraPosition };
         CharCode = 'c';
         Type = "Camera";
         Direction = cameraDirection;

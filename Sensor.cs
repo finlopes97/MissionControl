@@ -9,7 +9,17 @@ public class Sensor : IObstacle
     /// <summary>
     /// Gets or sets the list of positions associated with this sensor.
     /// </summary>
-    public List<OrderedPair>? Positions { get; set; }
+    public List<Coordinate>? Positions { get; set; }
+    
+    /// <summary>
+    /// The sensor is not traversable.
+    /// </summary>
+    public bool IsTraversable => false;
+    
+    /// <summary>
+    /// Sensors have no movement cost as they are not traversable.
+    /// </summary>
+    public int MovementCost => 0;
     
     /// <summary>
     /// Gets the character code representing this sensor.
@@ -48,19 +58,9 @@ public class Sensor : IObstacle
     /// </summary>
     /// <param name="cellToCheck">The cell to check for intersection.</param>
     /// <returns>True if the sensor intersects with the cell, otherwise false.</returns>
-    public bool IntersectsWithCell(OrderedPair cellToCheck)
+    public bool IntersectsWithCell(Coordinate cellToCheck)
     {
         return Positions != null && Positions.Contains(cellToCheck);
-    }
-    
-    /// <summary>
-    /// Gets the origin position of the sensor.
-    /// </summary>
-    /// <returns>Returns the origin position of the sensor.</returns>
-    /// <exception cref="Exception">Throws an exception if object has no positions.</exception>
-    public OrderedPair OriginPosition()
-    {
-        return (Positions ?? throw new InvalidOperationException( "Sensor has no positions." )).First();
     }
     
     /// <summary>
@@ -69,8 +69,9 @@ public class Sensor : IObstacle
     /// <param name="sensorPosition">The sensor's position.</param>
     /// <param name="cellPosition">The position of the cell to check.</param>
     /// <returns>True if the cell is within range; otherwise, false.</returns>
-    private static bool CellInRange(OrderedPair sensorPosition, OrderedPair cellPosition)
+    private static bool CellInRange(Coordinate sensorPosition, Coordinate cellPosition)
     {
+        // Uses the Pythagorean formula to determine if the cell is within range.
         double distanceBetweenCells = Math.Sqrt(
             Math.Pow(cellPosition.X - sensorPosition.X, 2) +
             Math.Pow(cellPosition.Y - sensorPosition.Y, 2));
@@ -92,9 +93,9 @@ public class Sensor : IObstacle
     /// </summary>
     /// <param name="sensorPosition">The initial position of the sensor.</param>
     /// <param name="sensorRange">The range within which the sensor can detect obstacles.</param>
-    public Sensor(OrderedPair sensorPosition, double sensorRange)
+    public Sensor(Coordinate sensorPosition, double sensorRange)
     {
-        Positions = new List<OrderedPair> { sensorPosition };
+        Positions = new List<Coordinate> { sensorPosition };
         CharCode = 's';
         Type = "Sensor";
         SensorRange = sensorRange;
@@ -103,7 +104,7 @@ public class Sensor : IObstacle
         {
             for (int y = sensorPosition.Y - (int)SensorRange; y <= sensorPosition.Y + (int)SensorRange; y++)
             {
-                OrderedPair cellPosition = new OrderedPair(x,y);
+                Coordinate cellPosition = new Coordinate(x,y);
                 if (CellInRange(sensorPosition, cellPosition))
                 {
                     Positions.Add(cellPosition);
