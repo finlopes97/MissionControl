@@ -12,6 +12,7 @@ public interface IObstacle
     
     /// <summary>
     /// The cost of traversing the obstacle.
+    /// A movement cost of 0 indicates that an obstacle is not traversable.
     /// </summary>
     public int MovementCost { get; }
     

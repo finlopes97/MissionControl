@@ -1,8 +1,11 @@
 namespace MissionControl;
 
+/// <summary>
+/// Contains methods related to agent movement and pathfinding.
+/// </summary>
 public static class AgentService
-{
-        /// <summary>
+{ 
+    /// <summary>
     /// Checks the board for obstacles and writes a string of safe directions that the agent can move in to the program's output.
     /// </summary>
     public static void ShowSafeDirections()

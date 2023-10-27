@@ -7,7 +7,7 @@ namespace MissionControl;
 public class Camera : IObstacle
 {
     /// <summary>
-    /// Gets the position of the camera as a list of ordered pairs.
+    /// Gets the positions of the camera as a list of ordered pairs.
     /// </summary>
     public List<Coordinate>? Positions { get; set; }
     

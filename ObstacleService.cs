@@ -5,6 +5,9 @@ namespace MissionControl;
 /// </summary>
 public static class ObstacleService
 {
+    /// <summary>
+    /// A list of obstacles that have been added to the program.
+    /// </summary>
     public static readonly List<IObstacle> Obstacles = new List<IObstacle>();
 
     /// <summary>
