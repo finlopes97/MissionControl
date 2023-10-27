@@ -10,6 +10,9 @@ public static class Program
     /// </summary>
     public static void Main()
     {
+        // Using a bool to hide the menu if the user enters an invalid option 
+        // but shows it after a successful operation, or if an exception is encountered
+        // mid-operation.
         bool showMenu = true;
 
         while(true)
@@ -36,7 +39,7 @@ public static class Program
             catch (ArgumentException ex)
             {
                 Console.WriteLine(ex.Message);
-                showMenu = false;
+                showMenu = true;
             }
         }
     }
