@@ -3,6 +3,8 @@ using System.Text;
 
 /// <summary>
 /// Provides methods for pathfinding within the mission control system.
+/// Credit to Red Blob Games for the A* pathfinding algorithm inspiration.
+/// https://www.redblobgames.com/pathfinding/a-star/introduction.html
 /// </summary>
 public static class PathfindingService
 {
