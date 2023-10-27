@@ -61,7 +61,7 @@ public class Fence : IObstacle
     /// </summary>
     /// <returns>A list of positions representing the points occupied by the fence.</returns>
     /// <exception cref="ArgumentException">Thrown when the fence is neither horizontal nor vertical.</exception>
-    private List<Coordinate> Points()
+    private List<Coordinate> CalculateFencePositions()
     {
         int numPoints;
         List<Coordinate> points = new List<Coordinate>();
@@ -128,7 +128,7 @@ public class Fence : IObstacle
 
         FenceStartingPosition = fenceStartingPosition;
         FenceEndingPosition = fenceEndingPosition;
-        Positions = Points();
+        Positions = CalculateFencePositions();
         CharCode = 'f';
         Type = "Fence";
     }

@@ -1,5 +1,8 @@
 namespace MissionControl;
 
+/// <summary>
+/// A static class that contains methods for adding obstacles to the list of obstacles.
+/// </summary>
 public static class ObstacleService
 {
     public static readonly List<IObstacle> Obstacles = new List<IObstacle>();

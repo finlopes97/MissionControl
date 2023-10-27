@@ -31,7 +31,6 @@ public static class Helper
         Board board = new Board(mapTopLeft, mapBottomRight);
         Console.WriteLine( board.ToString() );
     }
-
     
     /// <summary>
     /// Parses a string representation of position coordinates and returns an Coordinate.

@@ -66,13 +66,20 @@ public class Quicksand : IObstacle
         Random random = new Random();
         int areaRangeInt = Convert.ToInt32(areaRange);
 
+        // Iterate over a square area defined by the areaRange around the origin.
         for (int x = origin.X - areaRangeInt; x <= origin.X + areaRangeInt; x++)
         {
             for (int y = origin.Y - areaRangeInt; y <= origin.Y + areaRangeInt; y++)
             {
+                // Calculate the Euclidean distance from the current cell to the origin.
                 double distance = Math.Sqrt(Math.Pow(x - origin.X, 2) + Math.Pow(y - origin.Y, 2));
+                
+                // Calculate the probability of the current cell being filled with quicksand.
+                // The probability decreases linearly as the distance from the origin increases.
+                // At the origin, the probability is 1, and at the edge of the areaRange, it approaches 0.
                 double probability = 1 - (distance / (areaRangeInt + 1)); // The probability of a cell being filled decreases as the distance from the origin increases.
 
+                // Randomly decide if the current cell should be filled based on the calculated probability.
                 if (random.NextDouble() < probability)
                 {
                     filledPositions.Add(new Coordinate(x,y));
