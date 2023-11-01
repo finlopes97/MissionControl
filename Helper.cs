@@ -9,9 +9,14 @@ public static class Helper
     /// Gets a user-selected option from the console input.
     /// </summary>
     /// <returns>The user-selected option character.</returns>
-    public static char GetOption()
+    public static char? GetOption()
     {
         string? input = Console.ReadLine();
+        if (input == "upupdowndownleftrightleftrightbastart")
+        {
+            Console.WriteLine( "Cheats activated ;)" );
+            return null;
+        }
         if (input == null || input.Length != 1)
             throw new ArgumentException("Invalid input.\n" +
                                         "Enter code:" );

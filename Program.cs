@@ -21,7 +21,7 @@ public static class Program
             {
                 UIService.PrintMenu();
             }
-            char option;
+            char? option;
             try
             {
                 option = Helper.GetOption();
@@ -33,7 +33,11 @@ public static class Program
             }
             try
             {
-                UIService.ProcessOption(option);
+                if (option != null)
+                {
+                    UIService.ProcessOption(option);
+                    continue;
+                }
                 showMenu = true; 
             }
             catch (ArgumentException ex)

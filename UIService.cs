@@ -30,7 +30,7 @@ public static class UIService
     /// Processes the user's selected option and performs the corresponding action.
     /// </summary>
     /// <param name="option">The option selected by the user.</param>
-    public static void ProcessOption(char option)
+    public static void ProcessOption(char? option)
     {
         switch (option)
         {
