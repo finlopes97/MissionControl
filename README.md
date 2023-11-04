@@ -1,12 +1,3 @@
-## Task Description
-As part of a contract with a fictional spy agency, create a piece of software that assists field agents in gathering information from highly secure facilities. The software must represent a menu allowing an agent to specify obstacles to their mission and provide information to the agent upon request including the ability to determine a safe path to an objective.
-
-This task requires the use of object oriented programming within a .Net 6.0 runtime using C#. The codebase must be well documented and feature proper use of exception handling. 
-
-| Est. Completion Time | Weighting |
-|----------------------|-----------|
-| 25-50 hours          | 50%       |
-
 ## User Interface
 The program will present a menu to the user with a series of options, each consisting of a one-letter code and a short description like so: 
 ```
